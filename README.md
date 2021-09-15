@@ -76,7 +76,6 @@ grep -EHirn "accesskey|admin|aes|api_key|apikey|checkClientTrusted|crypt|http:|h
 ```
 grep -ohr -E "https?://[a-zA-Z0-9\.\/_&=@$%?~#-]*" /app/ |sort|uniq >> test.txt
 ```
-
 ## mysql
 
 开远程
@@ -240,6 +239,12 @@ find / -name index.php
 
 ```
 find / -name "index.php" | xargs grep "111222"
+```
+
+```
+进程路径
+wmic process get name,executablepath
+
 ```
 
 ## powershell文件下载
