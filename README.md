@@ -56,7 +56,7 @@ python3 dirsearch.py -e php,html,js -u https://target --proxy socks5://10.10.0.1
 ## nbtscan
 
 ```
-nbtscan.exe -r 10.11.1.0/24
+nbtscan.exe 10.11.1.0/24
 ```
 
 ## grep
@@ -233,6 +233,31 @@ netsh firewall show config
 关闭windefebd
 net stop windefend
 ```
+
+## frp常用配置
+frpc.ini
+```
+[common]
+server_addr = xxxxxx
+server_port = 7000
+
+[rdp]
+type = tcp
+local_port = 3389
+remote_port = 3389
+
+[plugin_http_proxy]
+type = tcp
+remote_port = 10801
+plugin = http_proxy
+
+[plugin_socks5]
+type = tcp
+remote_port = 1080
+plugin = socks5
+
+```
+
 
 ## 删rdp日志
 
