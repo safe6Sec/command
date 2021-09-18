@@ -518,6 +518,8 @@ sc \\192.168.210.107 start hacker      #启动hacker服务
 ```
 
 ## impacket命令
+
+下载https://github.com/maaaaz/impacket-examples-windows   
 Atexec
 ```
 需要135端口开启
