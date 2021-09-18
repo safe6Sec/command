@@ -25,6 +25,11 @@ nmap -p445 10.11.1.0 --script smb-vuln-ms17-010
 nmap -v -sn -PE -n --min-hostgroup 1024 --min-parallelism 1024 -oG tmp -iL ip.txt | awk '{print $5}' | grep -v "latency)." >ok_ip.txt
 ```
 
+## 存活主机
+```
+for /L %I in (1,1,256) DO @ping -w 1 -l 1 192.168.202.%I | findstr “TTL=”
+```
+
 ## gobuster
 
 ```
