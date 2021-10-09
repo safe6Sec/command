@@ -1,7 +1,7 @@
 # command
 收集渗透中会用到的常用命令  。
 
-更新时间：2021.9.22
+更新时间：2021.10.9
 
 ## nmap
 
@@ -28,6 +28,13 @@ nmap -v -sn -PE -n --min-hostgroup 1024 --min-parallelism 1024 -oG tmp -iL ip.tx
 ## 存活主机
 ```
 for /L %I in (1,1,256) DO @ping -w 1 -l 1 192.168.202.%I | findstr “TTL=”
+```
+
+## bypass
+Defender排除项
+```
+powershell -ExecutionPolicy Bypass Add-MpPreference -ExclusionPath "C:\test"
+
 ```
 
 ## gobuster
