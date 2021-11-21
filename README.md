@@ -164,6 +164,13 @@ use mysql;
 update user set host = '%' where user = 'root';  
 FLUSH PRIVILEGES ;  
 select host, user from user;
+ mysql -uroot -p -e "select * from mysql.user;" >1.txt
+```
+
+不登录直接执行sql
+```
+mysql -uaHmin -proot test -e "select now()" -N >H:/work/target1.txt
+mysql -uroot -e "show databases;" >1.txt
 ```
 
 mysql getshell
