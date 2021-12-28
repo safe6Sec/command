@@ -273,6 +273,10 @@ base64分段不换行追加写文件
 echo|set /p=\"PCFET0NUWVBFIGh0bWw+IDxodG1sPiA8aGVhZD4gPG1ldGEgaHR0cC1lcXVpdj0iQ29udGVudC1UeXBlIiBjb250ZW50PSJ0ZXh0L2h0bWw7IGNoYXJzZXQ9dXRmLTgiIC8+PGgxPjIwMjHlubR4eHjnvZHnu5zlronlhajlrp7miJjmvJTnu4M8L2gxPg==\" > D:\UFGOV\U8\webapps\demonstrate.txt
 ```
 
+解决cmd无回显问题
+```
+powershell Get-ChildItem C:
+```
 
 
 ## hydra
