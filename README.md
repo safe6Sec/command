@@ -354,6 +354,9 @@ proxychain
 sockscap64    
 proxifier   
 
+https://drive.google.com/drive/folders/1x5naJeK2YkV6QCYUlUg5QNMl1Izf4-ti   
+https://www.mediafire.com/folder/32rj1769a2w82/v4.7   
+
 ## ssh
 无记录shell
 
