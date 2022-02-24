@@ -598,17 +598,19 @@ netsh advfirewall firewall add rule name="44" protocol=TCP dir=in localport=4444
 删除规则
 netsh advfirewall firewall delete rule name="88"
 
-       netsh firewall set portopening TCP 445 ENABLE //打开445端口
-       netsh firewall set portopening TCP 3389 ENABLE //开放终端
-       netsh firewall delete allowedprogram C:/A.exe //删除放行程序A.exe
-       netsh firewall set allowedprogram C:/A.exe test ENABLE //添加程序C盘下的A.exe并放行
-       netsh firewall add allowedprogram C:/A.exe test ENABLE //添加程序C盘下的A.exe并放行 
-
 查看防火墙配置(可看到具体规则等配置)
 netsh firewall show config
 
 关闭windefebd
 net stop windefend
+
+netsh firewall set portopening TCP 445 ENABLE //打开445端口    
+netsh firewall set portopening TCP 3389 ENABLE //开放终端  
+netsh firewall delete allowedprogram C:/A.exe //删除放行程序A.exe   
+netsh firewall set allowedprogram C:/A.exe test ENABLE //添加程序C盘下的A.exe并放行   
+netsh firewall add allowedprogram C:/A.exe test ENABLE //添加程序C盘下的A.exe并放行   
+
+
 ```
 
 ## frp常用配置
