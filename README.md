@@ -610,6 +610,10 @@ netsh firewall delete allowedprogram C:/A.exe //删除放行程序A.exe
 netsh firewall set allowedprogram C:/A.exe test ENABLE //添加程序C盘下的A.exe并放行   
 netsh firewall add allowedprogram C:/A.exe test ENABLE //添加程序C盘下的A.exe并放行   
 
+新版本命令   
+
+netsh advfirewall firewall add rule name="test" dir=in action=allow program="C:\windows\temp\update.exe" enable=yes   
+netsh advfirewall firewall add rule name="test" dir=out action=allow program="C:\windows\temp\update.exe" enable=yes   
 
 ```
 
