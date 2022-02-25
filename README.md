@@ -302,6 +302,20 @@ qwertyui
 casper
 ```
 
+## cs凭证解析
+
+提取用户名
+```
+awk -F":::" '{print $1}' credentials.txt | awk -F"\\" '{print $2}'
+```
+提取hash
+```
+awk -F":::" '{print $2}' credentials.txt
+```
+
+
+
+
 
 ## 存活主机
 ```
