@@ -92,6 +92,10 @@ nmap -v -sn -PE -n --min-hostgroup 1024 --min-parallelism 1024 -oG tmp -iL ip.tx
 ```
 
 ## 字典
+
+<details>
+<summary>top200</summary>
+
 ```
 123456
 password
@@ -301,6 +305,9 @@ tennis
 qwertyui
 casper
 ```
+
+</details>
+
 
 ## Mimikatz
 
