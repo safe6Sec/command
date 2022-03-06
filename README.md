@@ -421,6 +421,32 @@ proxifier
 https://drive.google.com/drive/folders/1x5naJeK2YkV6QCYUlUg5QNMl1Izf4-ti   
 https://www.mediafire.com/folder/32rj1769a2w82/v4.7   
 
+
+## 内网穿透工具
+
+### fuso
+
+- https://github.com/editso/fuso.git   
+- 相对冷门，不会被杀
+在9004上开启socks5代理  
+```
+fuc.exe 159.138.0.0 9003 -h 127.0.0.1 -p 9004 -b 9004 -n test -t socks5 --bridge-host 0.0.0.0 --bridge-port 9004
+```
+
+### frp
+
+### nps
+
+### iox
+
+### Stowaway
+https://github.com/lz520520/Stowaway
+
+### Venom
+https://github.com/Dliv3/Venom
+
+
+
 ## ssh
 无记录shell
 
