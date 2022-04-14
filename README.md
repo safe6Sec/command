@@ -84,6 +84,12 @@ echo qaxnb>1we.txt
 ```
 echo qaxnb>>1we.txt
 ```
+规避空格
+```
+echo.123>>a.txt
+echo,123>>a.txt
+type;a.txt
+```
 写特殊字符很多的文件，可以用certutil编码再还原。
 如下还原
 ```
