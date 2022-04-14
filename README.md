@@ -84,6 +84,10 @@ echo qaxnb>1we.txt
 ```
 echo qaxnb>>1we.txt
 ```
+不换行追加
+```
+set /p="121d2">>a.txt
+```
 规避空格
 ```
 echo.123>>a.txt
