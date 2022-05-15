@@ -851,11 +851,21 @@ del Default.rdp
 
 ## 开3389
 ```
-系统windows server 2003后
+方法一
 wmic /namespace:\root\cimv2\terminalservices path win32_terminalservicesetting where (__CLASS != "") call setallowtsconnections 1
 wmic /namespace:\root\cimv2\terminalservices path win32_tsgeneralsetting where (TerminalName ='RDP-Tcp') call setuserauthenticationrequired 1
 reg add "HKLM\SYSTEM\CurrentControlSet\Control\Terminal Server" /v fSingleSessionPerUser /t REG_DWORD /d 0 /f
 net start TermService
+
+方法二
+#设置远程桌面端口
+reg add "HKLM\System\CurrentControlSet\Control\Terminal Server\WinStations\RDP-Tcp" /t REG_DWORD /v portnumber /d 3389 /f
+#开启远程桌面
+wmic RDTOGGLE WHERE ServerName='%COMPUTERNAME%' call SetAllowTSConnections 1
+#检查端口状态
+netstat -an|find "3389"
+#关闭远程桌面
+wmic RDTOGGLE WHERE ServerName='%COMPUTERNAME%' call SetAllowTSConnections 0
 ```
 
 ## 文件搜索
