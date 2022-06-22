@@ -106,6 +106,22 @@ nmap -p445 10.11.1.0 --script smb-vuln-ms17-010
 nmap -v -sn -PE -n --min-hostgroup 1024 --min-parallelism 1024 -oG tmp -iL ip.txt | awk '{print $5}' | grep -v "latency)." >ok_ip.txt
 ```
 
+## masscan 
+注意速率问题,根据带宽调整。100m带宽可调3000,注意是vps，不是家庭宽带。   
+
+关于编译，直接git拉下来，make就行。生成的文件在bin下面。   
+扫描单ip   
+```
+masscan 192.168.1.110 -p 1-65535 --rate=1000
+```
+扫描列表
+```
+masscan -iL ip.txt -p1-65535 --rate=1000 -oL port.txt
+```
+
+
+
+
 ## 端口列表
 
 ```
