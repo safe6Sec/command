@@ -411,7 +411,7 @@ awk -F":::" '{print $2}' credentials.txt
 
 ## 存活主机
 ```
-for /L %I in (1,1,256) DO @ping -w 1 -l 1 192.168.202.%I | findstr “TTL=”
+for /L %I in (1,1,256) DO @ping -w 1 -l 1 192.168.202.%I | findstr "TTL="
 ```
 
 ## bypass
@@ -626,6 +626,7 @@ wmic process where name='mysqld.exe' get processid,executablepath,name
 ```
 for /f %i in ('dir /s /b D:\UFGOV\U8\login.jsp') do (echo %i)
 ```
+
 base64分段不换行追加写文件
 ```
 echo|set /p=\"PCFET0NUWVBFIGh0bWw+IDxodG1sPiA8aGVhZD4gPG1ldGEgaHR0cC1lcXVpdj0iQ29udGVudC1UeXBlIiBjb250ZW50PSJ0ZXh0L2h0bWw7IGNoYXJzZXQ9dXRmLTgiIC8+PGgxPjIwMjHlubR4eHjnvZHnu5zlronlhajlrp7miJjmvJTnu4M8L2gxPg==\" > D:\UFGOV\U8\webapps\demonstrate.txt
