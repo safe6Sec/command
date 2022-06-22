@@ -1,64 +1,11 @@
 # command
 收集渗透中会用到的常用命令  。
 
-更新时间：2022.4.14
+更新时间：2022.6.23
 
 
-以下目录有问题，待更新。建议直接[Ctrl+F]查找  
-Table of Contents
+建议直接[Ctrl+F]查找    
 
-- [command](#command)
-  - [nmap](#nmap)
-  - [存活主机](#%E5%AD%98%E6%B4%BB%E4%B8%BB%E6%9C%BA)
-  - [bypass](#bypass)
-  - [gobuster](#gobuster)
-  - [dirsearch](#dirsearch)
-  - [nbtscan](#nbtscan)
-  - [代理工具](#%E4%BB%A3%E7%90%86%E5%B7%A5%E5%85%B7)
-  - [ssh](#ssh)
-  - [grep](#grep)
-  - [mysql](#mysql)
-  - [sqlmap](#sqlmap)
-  - [hydra](#hydra)
-  - [medusa](#medusa)
-  - [python交互shell](#python%E4%BA%A4%E4%BA%92shell)
-  - [无交互添加用户](#%E6%97%A0%E4%BA%A4%E4%BA%92%E6%B7%BB%E5%8A%A0%E7%94%A8%E6%88%B7)
-    - [windows](#windows)
-  - [防火墙](#%E9%98%B2%E7%81%AB%E5%A2%99)
-  - [frp常用配置](#frp%E5%B8%B8%E7%94%A8%E9%85%8D%E7%BD%AE)
-  - [删rdp日志](#%E5%88%A0rdp%E6%97%A5%E5%BF%97)
-  - [开3389](#%E5%BC%803389)
-  - [文件查找](#%E6%96%87%E4%BB%B6%E6%9F%A5%E6%89%BE)
-  - [powershell文件下载](#powershell%E6%96%87%E4%BB%B6%E4%B8%8B%E8%BD%BD)
-  - [certutil.exe下载](#certutilexe%E4%B8%8B%E8%BD%BD)
-  - [bitsadmin](#bitsadmin)
-  - [windows信息收集常用命令](#windows%E4%BF%A1%E6%81%AF%E6%94%B6%E9%9B%86%E5%B8%B8%E7%94%A8%E5%91%BD%E4%BB%A4)
-  - [at&schtasks&sc横向](#atschtaskssc%E6%A8%AA%E5%90%91)
-  - [impacket包横向命令](#impacket%E5%8C%85%E6%A8%AA%E5%90%91%E5%91%BD%E4%BB%A4)
-  - [反弹shell](#%E5%8F%8D%E5%BC%B9shell)
-  - [nc](#nc)
-  - [bash](#bash)
-  - [perl](#perl)
-  - [python](#python)
-  - [php](#php)
-  - [ruby](#ruby)
-  - [nc](#nc-1)
-  - [java](#java)
-  - [lua](#lua)
-  - [powershell](#powershell)
-  - [加密shell](#%E5%8A%A0%E5%AF%86shell)
-- [msf大全](#msf%E5%A4%A7%E5%85%A8)
-  - [安装](#%E5%AE%89%E8%A3%85)
-  - [Meterpreter基本命令](#meterpreter%E5%9F%BA%E6%9C%AC%E5%91%BD%E4%BB%A4)
-    - [基本系统命令](#%E5%9F%BA%E6%9C%AC%E7%B3%BB%E7%BB%9F%E5%91%BD%E4%BB%A4)
-    - [文件系统命令](#%E6%96%87%E4%BB%B6%E7%B3%BB%E7%BB%9F%E5%91%BD%E4%BB%A4)
-    - [网络命令](#%E7%BD%91%E7%BB%9C%E5%91%BD%E4%BB%A4)
-    - [信息收集](#%E4%BF%A1%E6%81%AF%E6%94%B6%E9%9B%86)
-    - [提权](#%E6%8F%90%E6%9D%83)
-    - [获取凭证](#%E8%8E%B7%E5%8F%96%E5%87%AD%E8%AF%81)
-    - [假冒令牌](#%E5%81%87%E5%86%92%E4%BB%A4%E7%89%8C)
-    - [植入后门](#%E6%A4%8D%E5%85%A5%E5%90%8E%E9%97%A8)
-- [cs大全](#cs%E5%A4%A7%E5%85%A8)
 
 # java命令执行
 http://www.jackson-t.ca/runtime-exec-payloads.html 已不能访问，使用如下网址代替   
@@ -66,7 +13,7 @@ https://ares-x.com/tools/runtime-exec/
 https://r0yanx.com/tools/java_exec_encode/    
 https://www.bugku.net/runtime-exec-payloads/   
 
-手动操作  
+手动编码操作  
 ```
 bash -c {echo,cGluZyAxMjcuMC4wLjE7ZWNobyAxID50ZXN0LnR4dA==}|{base64,-d}|{bash,-i}
 ```
