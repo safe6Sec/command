@@ -119,6 +119,15 @@ masscan 192.168.1.110 -p 1-65535 --rate=1000
 masscan -iL ip.txt -p1-65535 --rate=1000 -oL port.txt
 ```
 
+解析,提取ip:port
+```
+cat port.txt |awk '{print $4":"$3}'
+```
+转换为nmap可用端口
+```
+cat p.txt | tr "\n" ,
+```
+
 
 
 
