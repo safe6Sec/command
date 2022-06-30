@@ -759,6 +759,12 @@ netsh advfirewall firewall add rule name="test" dir=out action=allow program="C:
 
 ```
 
+iptables 放行  
+```
+iptables -A INPUT -p tcp --dport 80 -j ACCEPT
+
+```
+
 ## frp常用配置
 frpc.ini
 ```
