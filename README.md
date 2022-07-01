@@ -487,6 +487,13 @@ fuc.exe 159.138.0.0 9003 -h 127.0.0.1 -p 9004 -b 9004 -n test -t socks5 --bridge
 ### frp
 
 ### nps
+https://github.com/ehang-io/nps     
+
+```
+ sudo ./nps install
+ sudo nps start
+```
+安装后配置文件位置/etc/nps，默认密码(可在配置文件里面修改)admin/123  
 
 ### iox
 
