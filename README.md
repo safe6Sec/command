@@ -106,6 +106,12 @@ nmap -p445 10.11.1.0 --script smb-vuln-ms17-010
 nmap -v -sn -PE -n --min-hostgroup 1024 --min-parallelism 1024 -oG tmp -iL ip.txt | awk '{print $5}' | grep -v "latency)." >ok_ip.txt
 ```
 
+nmap 极速扫描，快如闪电
+```
+nmap -n --unique --resolve-all -Pn --min-hostgroup 64 --max-retries 0 --host-timeout 10m --script-timeout 3m -oX {filename} --version-intensity 9 --min-rate 10000 -T4 192.168.23.1
+nmap -n --resolve-all -Pn --min-hostgroup 64 --max-retries 0 --host-timeout 10m --script-timeout 3m -oX {filename} --version-intensity 9 --min-rate 10000 -T4 192.168.23.1
+```
+
 ## masscan 
 注意速率问题,根据带宽调整。100m带宽可调3000,注意是vps，不是家庭宽带。   
 
