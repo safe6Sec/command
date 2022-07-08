@@ -112,6 +112,11 @@ nmap -n --unique --resolve-all -Pn --min-hostgroup 64 --max-retries 0 --host-tim
 nmap -n --resolve-all -Pn --min-hostgroup 64 --max-retries 0 --host-timeout 10m --script-timeout 3m -oX {filename} --version-intensity 9 --min-rate 10000 -T4 192.168.23.1
 ```
 
+获取http title
+```
+nmap -n --resolve-all -Pn --min-hostgroup  --max-retries 3 --host-timeout 10m --script-timeout 3m --version-intensity 9 --min-rate 10000 --script=http-title -T4 -p- -iL domain.txt
+```
+
 ## masscan 
 注意速率问题,根据带宽调整。100m带宽可调3000,注意是vps，不是家庭宽带。   
 
