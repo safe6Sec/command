@@ -540,6 +540,13 @@ grep -EHirn "accesskey|admin|aes|api_key|apikey|checkClientTrusted|crypt|http:|h
 ```
 grep -ohr -E "https?://[a-zA-Z0-9\.\/_&=@$%?~#-]*" /app/ |sort|uniq >> test.txt
 ```
+
+web应用
+```
+grep -EHirn '--include=*.'{java,jsp,jspx,xml,conf,json,ini,properties,yaml,toml,plist,txt,sql} "accesskey|api_key|apikey|jdbc|username|pass|passwd|password" webapps/
+```
+
+
 ## mysql
 
 开远程
