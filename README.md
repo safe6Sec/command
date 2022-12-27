@@ -545,6 +545,14 @@ web应用
 grep -EHirn '--include=*.'{java,jsp,jspx,xml,conf,json,ini,properties,yaml,toml,plist,txt,sql} "accesskey|api_key|apikey|jdbc|username|pass|passwd|password" webapps/
 ```
 
+搜索文件内的字符串
+```
+grep -r "test" ./src
+
+显示行号
+grep -rn "test" ./src
+```
+
 
 ## mysql
 
