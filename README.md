@@ -81,6 +81,12 @@ $IFS$9
 %09
 ```
 
+# windows打包目录
+
+```
+powershell -Command "Compress-Archive -Path E:\update\ -DestinationPath E:\test.zip"
+```
+
 
 
 ## nmap
