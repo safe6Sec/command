@@ -7,7 +7,7 @@
 
 
 # java命令执行
-http://www.jackson-t.ca/runtime-exec-payloads.html 已不能访问，使用如下网址代替   
+如下编码网站：
 https://ares-x.com/tools/runtime-exec/    
 https://r0yanx.com/tools/java_exec_encode/    
 https://www.bugku.net/runtime-exec-payloads/   
@@ -846,6 +846,11 @@ netsh firewall add allowedprogram C:/A.exe test ENABLE //添加程序C盘下的A
 netsh advfirewall firewall add rule name="test" dir=in action=allow program="C:\windows\temp\update.exe" enable=yes   
 netsh advfirewall firewall add rule name="test" dir=out action=allow program="C:\windows\temp\update.exe" enable=yes   
 
+```
+端口转发   
+把本地的 801 端口转发到远程的 172.23.80.14 的 80 端口
+```
+netsh interface portproxy add v4tov4 listenport=801 connectport=80 connectaddress=172.23.80.14
 ```
 
 iptables 放行  
