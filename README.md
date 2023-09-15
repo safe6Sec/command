@@ -710,6 +710,11 @@ find /root -name war|while read file;do sh -c "echo $file">$file/finddir.txt;don
 ```
 wmic process where name='mysqld.exe' get processid,executablepath,name
 ```
+程序pid找路径
+```
+wmic process get name,executablepath,processid|findstr pid
+```
+
 启动路径找login.jsp
 ```
 for /f %i in ('dir /s /b D:\UFGOV\U8\login.jsp') do (echo %i)
