@@ -105,8 +105,28 @@ https://transfer.sh/fF6OA7aF8o/hello.txt
 
 ## nmap
 
+只执行 ping 扫描。它不会进行任何端口扫描或服务/版本检测
 ```
 nmap -sn 10.11.1.0/24
+```
+
+SYN扫描，不ping
+```
+sudo nmap -sS -Pn 192.168.10.1/24
+```
+
+udp发包探测存活，比较慢
+```
+sudo nmap -sU -Pn 10.11.1.0/24
+```
+多种方式，进行存活探测(TCP ACK、TCP FIN 和 UDP 数据包来探测主机)
+```
+sudo nmap -PA -Pn 192.168.10.1/24
+```
+
+
+```
+nmap -sU -Pn 10.11.1.0/24
 ```
 
 ```
