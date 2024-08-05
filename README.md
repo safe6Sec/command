@@ -104,9 +104,19 @@ curl --upload-file ./hello.txt https://transfer.sh/hello.txt
 获取
 https://transfer.sh/fF6OA7aF8o/hello.txt
 
-
 ```
 
+
+## nbtscan
+
+```
+nbtscan.exe 10.11.1.0/24
+```
+
+## dos命令存活主机探测
+```
+for /L %I in (1,1,256) DO @ping -w 1 -l 1 192.168.202.%I | findstr "TTL="
+```
 
 
 ## nmap
@@ -130,11 +140,7 @@ sudo nmap -sU -Pn 10.11.1.0/24
 sudo nmap -PA -Pn 192.168.10.1/24
 ```
 
-
-```
-nmap -sU -Pn 10.11.1.0/24
-```
-
+扫描版本，全端口
 ```
 nmap -sV -p- 10.11.1.0
 ```
@@ -474,10 +480,7 @@ awk -F":::" '{print $2}' credentials.txt
 
 
 
-## 存活主机
-```
-for /L %I in (1,1,256) DO @ping -w 1 -l 1 192.168.202.%I | findstr "TTL="
-```
+
 
 ## bypass
 Defender排除项
@@ -514,11 +517,7 @@ python3 dirsearch.py -e php,html,js -u https://target --proxy 127.0.0.1:8080
 python3 dirsearch.py -e php,html,js -u https://target --proxy socks5://10.10.0.1:8080
 ```
 
-## nbtscan
 
-```
-nbtscan.exe 10.11.1.0/24
-```
 
 ## 代理工具
 proxychain   
