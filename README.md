@@ -104,7 +104,7 @@ $IFS$9
 powershell -Command "Compress-Archive -Path E:\update\ -DestinationPath E:\test.zip"
 ```
 
-# 匿名文件存储
+## 匿名文件存储
 可用命令行   
 https://transfer.sh/
 使用很简单   
@@ -1150,7 +1150,7 @@ updatedb && locate index.php
 进程路径
 wmic process get name,executablepath
 ```
-### 命令执行无回显外带oob
+## 命令执行无回显外带oob
 #### Windows
 在windows当中，%cd% 代表的是当前目录，我们通过echo将当前目录写入文本temp,然后荣国certutil对文件内容进行base64编码，再过滤certutil携带的字符，将它赋给一个变量，最后通过nslookup外带出来，从而实现获取当前目录的目的。
 ```
