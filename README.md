@@ -82,6 +82,9 @@ xxd -ps -u Everything.exe | tr -d '\n' >ou.txt
 ```
 certutil -f -decode 111.txt C:\\111.jsp
 certutil -decodehex 111.txt C:\\111.jsp
+
+看hash
+certutil -hashfile a.exe MD5
 ```
 linux下base64
 ```
