@@ -521,6 +521,11 @@ python3 dirsearch.py -e php,html,js -u https://target
 python3 dirsearch.py -e php,html,js -u https://target -w /path/to/wordlist
 ```
 
+扫目录
+```
+python3 dirsearch.py -e php,html,js -u https://target -w /path/to/wordlist --remove-extensions
+```
+
 ```
 python3 dirsearch.py -e php,htm,js,bak,zip,tgz,txt -u https://target -t 20
 ```
@@ -779,6 +784,12 @@ EXEC sp_configure 'show advanced options', 1;RECONFIGURE;EXEC sp_configure 'xp_c
 ```
 
 ## gitlab相关
+
+未登录，可以访问如下url查看公开项目
+http:/xxxxx/explore
+
+
+
 进入控制台
 
 ```
