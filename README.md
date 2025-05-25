@@ -538,7 +538,10 @@ python3 dirsearch.py -e php,html,js -u https://target --proxy 127.0.0.1:8080
 python3 dirsearch.py -e php,html,js -u https://target --proxy socks5://10.10.0.1:8080
 ```
 
-
+从文件读取批量扫描
+```
+python3 dirsearch.py -l all_site.txt -o result.txt
+```
 
 ## 代理工具
 proxychain   
