@@ -786,6 +786,11 @@ https://github.com/uknowsec/SharpDecryptPwd
 C:\Program Files\Oray\SunLogin\SunloginClient\config.ini [默认路径]
 ```
 
+### RemoteWebScreen
+Golang开发的小众远程，运行后，直接网页访问就行。开源免费
+https://github.com/p1d3er/RemoteWebScreen
+
+
 
 其他，也可以用各个厂商的云助手来控制。成本有点高，但是免杀效果好。看个人需求选择。
 
