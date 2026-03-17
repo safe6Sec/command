@@ -757,6 +757,12 @@ C:\Users\administrator\AppData\Roaming\RustDesk\config
 https://gotohttp.com/
 运行后，当前目录就会生成配置文件，里面包含明文的id和密码，然后打开网页直接连接。
 
+注意：第一次启动后，会自动加自启服务，记得删除。而且每台机器连接时间时长有限，用完了，要收费。
+
+删除服务
+```
+sc delete gotohttp
+```
 
 ### todesk
 便携版
